@@ -20,5 +20,6 @@ touched for a period of time.
 
 Other
 =====
+* laser_curses.py = a curses interface for control
 * photo_scan.py = takes a series of photos over the range of servo motion
 
