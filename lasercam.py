@@ -15,6 +15,10 @@ class LaserCamBox():
     
     OE_PIN              =   4       # GPIO pin for PWM enable(LOW)/disable(HIGH)
     LASER_PIN           =   16      # GPIO pin for laser on(HIGH)/off(LOW)
+    CAM_LED_PIN         =   20      # white LED for camera
+    LED1_PIN            =   26      # front status LED 1 - TOP : GREEN
+    LED2_PIN            =   19      # front status LED 2 - MID : BLUE
+    LED3_PIN            =   13      # front status LED 3 - BOT : GREEN
     LASER_X_CHAN        =   2       # PWM channel for laser X
     LASER_Y_CHAN        =   3       # PWM channel for laser Y
     CAMERA_X_CHAN       =   0       # PWM channel for camera X
@@ -28,10 +32,12 @@ class LaserCamBox():
         # setup GPIO
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(LaserCamBox.OE_PIN, GPIO.OUT)
-        GPIO.output(LaserCamBox.OE_PIN, GPIO.HIGH)
-        GPIO.setup(LaserCamBox.LASER_PIN, GPIO.OUT)
-        GPIO.output(LaserCamBox.LASER_PIN, GPIO.LOW)
+        GPIO.setup(LaserCamBox.OE_PIN,      GPIO.OUT, initial=GPIO.HIGH)
+        GPIO.setup(LaserCamBox.LASER_PIN,   GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(LaserCamBox.CAM_LED_PIN, GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(LaserCamBox.LED1_PIN,    GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(LaserCamBox.LED2_PIN,    GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(LaserCamBox.LED3_PIN,    GPIO.OUT, initial=GPIO.LOW)
         
         # the PWM controller
         self.PWM = PWM(LaserCamBox.PWM_I2C, debug=False)
@@ -92,6 +98,41 @@ class LaserCamBox():
         
     def getLaserState(self):
         return GPIO.input(LaserCamBox.LASER_PIN)
+    
+    def cameraLEDOn(self):
+        GPIO.output(LaserCamBox.CAM_LED_PIN, GPIO.HIGH)
+        
+    def cameraLEDOff(self):
+        GPIO.output(LaserCamBox.CAM_LED_PIN, GPIO.LOW)
+        
+    def getCamLEDState(self):
+        return GPIO.input(LaserCamBox.CAM_LED_PIN)
+    
+    def statusLEDOn(self, led):
+        if   (led==1):
+            GPIO.output(LaserCamBox.LED1_PIN, GPIO.HIGH)
+        elif (led==2):
+            GPIO.output(LaserCamBox.LED2_PIN, GPIO.HIGH)
+        elif (led==3):
+            GPIO.output(LaserCamBox.LED3_PIN, GPIO.HIGH)
+        else:
+            pass
+
+    def statusLEDOff(self, led):
+        if   (led==1):
+            GPIO.output(LaserCamBox.LED1_PIN, GPIO.LOW)
+        elif (led==2):
+            GPIO.output(LaserCamBox.LED2_PIN, GPIO.LOW)
+        elif (led==3):
+            GPIO.output(LaserCamBox.LED3_PIN, GPIO.LOW)
+        else:
+            pass
+
+    def statusLEDAllOff(self):
+        self.statusLEDOff(1)
+        self.statusLEDOff(2)
+        self.statusLEDOff(3)
+    
     
 #===========================================================
 # MAIN

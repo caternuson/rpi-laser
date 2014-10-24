@@ -41,12 +41,15 @@ class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
         self.lasercambox.enablePWM(update=True)
         self.lasercambox.camera.hflip=True
         self.lasercambox.camera.vflip=True
+        
+        self.STREAM_STATUS_LED = 1
        
     def open(self):
         print "WS open from {}".format(self.request.remote_ip)
     
     def on_close(self):
         print "WS close"
+        self.__shutDown__()
     
     def on_message(self, message):
         print "WS message: {} = ".format(message),
@@ -83,14 +86,16 @@ class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
             self.lasercambox.cameraXVal += self.lasercambox.servoStep
         elif (MSG=='CN'):
             print "camera start stream"
-            self.lasercambox.camera.start_preview()
-            self.camera_loop = tornado.ioloop.PeriodicCallback(self.loop, 100)
-            self.camera_loop.start()
+            self.__startStream__()
         elif (MSG=='CO'):
             print "camera stop stream"
-            if (self.lasercambox.camera.previewing):
-                self.lasercambox.camera.stop_preview()            
-            self.camera_loop.stop()           
+            self.__stopStream__()
+        elif (MSG=='C1'):
+            print "camera LED on"
+            self.lasercambox.cameraLEDOn()
+        elif (MSG=='C2'):
+            print "camera LED off"
+            self.lasercambox.cameraLEDOff()
         elif (MSG=='SN'):
             print "servos on"
             self.lasercambox.enablePWM()
@@ -108,7 +113,25 @@ class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
             self.write_message(base64.b64encode(iostream.getvalue()))
         except tornado.websocket.WebSocketClosedError:
             self.camera_loop.stop()
+            
+    def __startStream__(self):
+        self.lasercambox.camera.start_preview()
+        self.camera_loop = tornado.ioloop.PeriodicCallback(self.loop, 100)
+        self.camera_loop.start()
+        self.lasercambox.statusLEDOn(self.STREAM_STATUS_LED)
     
+    def __stopStream__(self):
+        if (self.lasercambox.camera.previewing):
+            self.lasercambox.camera.stop_preview()            
+        self.camera_loop.stop()
+        self.lasercambox.statusLEDOff(self.STREAM_STATUS_LED)
+        
+    def __shutDown__(self):
+        self.__stopStream__()
+        self.lasercambox.disablePWM()
+        self.lasercambox.cameraLEDOff()
+        self.lasercambox.laserOff()
+        self.lasercambox.statusLEDAllOff()
         
 # separate HTTP and WebSockets based on URL
 handlers = ([

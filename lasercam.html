@@ -3,20 +3,23 @@
 <title>Laser Cam Control</title>
 </head>
 <body>
+    <center>
     <table border=1>
         <tr><td align=center colspan=2><img id="video" width=640 height=480/></td></tr>
 
         <tr><td bgcolor=#ffffaa align=center>CAMERA CONTROL</td><td bgcolor=#aaffff align=center>LASER CONTROL</td></tr>
         <tr>
-            <td align=center>
+            <td align=center valign=top>
                 <button type="button" onclick=ws_send_msg("CU")>UP</button>
                 <button type="button" onclick=ws_send_msg("CD")>DOWN</button>
                 <button type="button" onclick=ws_send_msg("CL")>LEFT</button>
                 <button type="button" onclick=ws_send_msg("CR")>RIGHT</button><br/>
+                <button type="button" onclick=ws_send_msg("C1")>LED ON</button>
+                <button type="button" onclick=ws_send_msg("C2")>LED OFF</button><br/>
                 <button type="button" onclick=ws_send_msg("CN")>START STREAM</button>
-                <button type="button" onclick=ws_send_msg("CO")>STOP STREAM</button>                
+                <button type="button" onclick=ws_send_msg("CO")>STOP STREAM</button>
             </td>
-            <td align=center>
+            <td align=center valign=top>
                 <button type="button" onclick=ws_send_msg("LU")>UP</button>
                 <button type="button" onclick=ws_send_msg("LD")>DOWN</button>
                 <button type="button" onclick=ws_send_msg("LL")>LEFT</button>
@@ -26,11 +29,11 @@
             </td>
         </tr>
         <tr><td align=center colspan=2>
-            <button type="button" onclick=ws_send_msg("SN")>SERVOS ON</button>
-            <button type="button" onclick=ws_send_msg("SO")>SERVOS OFF</button>
+                <button type="button" onclick=ws_send_msg("SN")>SERVOS ON</button>
+                <button type="button" onclick=ws_send_msg("SO")>SERVOS OFF</button>
         </td></tr>        
     </table>
-
+    </center>
 <script>
     // call back when browser window is closed
     window.onclose = ws_close;
