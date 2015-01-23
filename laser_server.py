@@ -26,7 +26,7 @@ PORT = 8008
 
 #-------------------------------------------------------------------------
 # Tornado Server Setup
-#-------------------------------------------------------------------------
+#-------------------------------------------------------------------------   
 # this will handle HTTP requests
 class MyRequestHandler(tornado.web.RequestHandler):
     def get(self):
@@ -56,16 +56,16 @@ class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
         MSG = message.strip().upper()
         if (MSG=='LU'):
             print "laser up"
-            self.lasercambox.laserYVal -= self.lasercambox.servoStep
+            self.lasercambox.laserUp()
         elif (MSG=='LD'):
             print "laser down"
-            self.lasercambox.laserYVal += self.lasercambox.servoStep
+            self.lasercambox.laserDown()
         elif (MSG=='LL'):
             print "laser left"
-            self.lasercambox.laserXVal -= self.lasercambox.servoStep
+            self.lasercambox.laserLeft()
         elif (MSG=='LR'):
             print "laser right"
-            self.lasercambox.laserXVal += self.lasercambox.servoStep
+            self.lasercambox.laserRight()
         elif (MSG=='LN'):
             print "laser on"
             self.lasercambox.laserOn()
@@ -74,16 +74,16 @@ class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
             self.lasercambox.laserOff() 
         elif (MSG=='CU'):
             print "camera up"
-            self.lasercambox.cameraYVal += self.lasercambox.servoStep
+            self.lasercambox.cameraUp()
         elif (MSG=='CD'):
             print "camera down"
-            self.lasercambox.cameraYVal -= self.lasercambox.servoStep
+            self.lasercambox.cameraDown()
         elif (MSG=='CL'):
             print "camera left"
-            self.lasercambox.cameraXVal -= self.lasercambox.servoStep
+            self.lasercambox.cameraLeft()
         elif (MSG=='CR'):
             print "camera right"
-            self.lasercambox.cameraXVal += self.lasercambox.servoStep
+            self.lasercambox.cameraRight()
         elif (MSG=='CN'):
             print "camera start stream"
             self.__startStream__()
@@ -104,11 +104,11 @@ class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
             self.lasercambox.disablePWM()
         else:
             print "unknown commad"
-        self.lasercambox.updatePWM()
+        #self.lasercambox.updatePWM()
     
     def loop(self):
         iostream = io.StringIO()
-        self.lasercambox.camera.capture(iostream, 'jpeg', use_video_port=True, resize=(640,480))
+        self.lasercambox.camera.capture(iostream, 'jpeg', use_video_port=True, resize=(320,240))
         try:
             self.write_message(base64.b64encode(iostream.getvalue()))
         except tornado.websocket.WebSocketClosedError:
@@ -116,7 +116,7 @@ class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
             
     def __startStream__(self):
         self.lasercambox.camera.start_preview()
-        self.camera_loop = tornado.ioloop.PeriodicCallback(self.loop, 100)
+        self.camera_loop = tornado.ioloop.PeriodicCallback(self.loop, 500)
         self.camera_loop.start()
         self.lasercambox.statusLEDOn(self.STREAM_STATUS_LED)
     
@@ -135,7 +135,7 @@ class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
         
 # separate HTTP and WebSockets based on URL
 handlers = ([
-    (r"/", MyRequestHandler),
+    (r"/lasercam", MyRequestHandler),
     (r"/ws", MyWebSocketHandler, dict(lasercambox=lasercam.LaserCamBox()))
 ])
 

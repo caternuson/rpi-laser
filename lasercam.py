@@ -22,7 +22,7 @@ class LaserCamBox():
     LASER_X_CHAN        =   2       # PWM channel for laser X
     LASER_Y_CHAN        =   3       # PWM channel for laser Y
     CAMERA_X_CHAN       =   0       # PWM channel for camera X
-    CAMERA_Y_CHAN       =   1       # PWM channel for camera Y
+    CAMERA_Y_CHAN       =   1       # PWM channel for camera Y   
     SERVO_MIN           =   205     # minimum PWM value for servo
     SERVO_MAX           =   410     # maximum PWM value for servo
     PWM_I2C             =   0x40    # i2c address for PWM controller
@@ -49,9 +49,10 @@ class LaserCamBox():
         # default values
         self.laserXVal = (LaserCamBox.SERVO_MIN + LaserCamBox.SERVO_MAX)/2
         self.laserYVal = (LaserCamBox.SERVO_MIN + LaserCamBox.SERVO_MAX)/2
+        self.laserStep = 10
         self.cameraXVal = (LaserCamBox.SERVO_MIN + LaserCamBox.SERVO_MAX)/2
         self.cameraYVal = (LaserCamBox.SERVO_MIN + LaserCamBox.SERVO_MAX)/2
-        self.servoStep = 10
+        self.cameraStep = 10
     
     def checkServoValues(self):
         self.laserXVal = self.laserXVal if (self.laserXVal>LaserCamBox.SERVO_MIN) else LaserCamBox.SERVO_MIN
@@ -90,6 +91,38 @@ class LaserCamBox():
         else:
             return None
      
+    def cameraUp(self):
+        self.cameraYVal -= self.cameraStep
+        self.updatePWM()
+        
+    def cameraDown(self):
+        self.cameraYVal += self.cameraStep
+        self.updatePWM()
+        
+    def cameraLeft(self):
+        self.cameraXVal -= self.cameraStep
+        self.updatePWM()
+        
+    def cameraRight(self):
+        self.cameraXVal += self.cameraStep
+        self.updatePWM()
+        
+    def laserUp(self):
+        self.laserYVal += self.laserStep
+        self.updatePWM()
+        
+    def laserDown(self):
+        self.laserYVal -= self.laserStep
+        self.updatePWM()
+        
+    def laserLeft(self):
+        self.laserXVal -= self.laserStep
+        self.updatePWM()
+        
+    def laserRight(self):
+        self.laserXVal += self.laserStep
+        self.updatePWM()
+        
     def laserOn(self):
         GPIO.output(LaserCamBox.LASER_PIN, GPIO.HIGH)
         
