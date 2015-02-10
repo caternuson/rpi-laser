@@ -28,6 +28,12 @@ PORT = 8008
 # Tornado Server Setup
 #-------------------------------------------------------------------------   
 # this will handle HTTP requests
+class MyKillRequestHandler(tornado.web.RequestHandler):
+    def get(self):
+        print "KILL Request from {}".format(self.request.remote_ip)
+        tornado.ioloop.IOLoop.instance().stop()
+
+# this will handle HTTP requests
 class MyRequestHandler(tornado.web.RequestHandler):
     def get(self):
         print "GET Request from {}".format(self.request.remote_ip)
@@ -43,6 +49,11 @@ class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
         self.lasercambox.camera.vflip=True
         
         self.STREAM_STATUS_LED = 1
+
+        self.cameraLocation = [None,None,None,None,None]
+        self.laserLocation = [None,None,None,None,None]
+        self.storeCamera = False
+        self.storeLaser = False
        
     def open(self):
         print "WS open from {}".format(self.request.remote_ip)
@@ -71,7 +82,20 @@ class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
             self.lasercambox.laserOn()
         elif (MSG=='LO'):
             print "laser off"
-            self.lasercambox.laserOff() 
+            self.lasercambox.laserOff()
+        elif (MSG=='L!'):
+            print "laser storage armed"
+            self.storeLaser=True
+        elif (MSG=='L1'):
+            self.__laserPreset__(0)
+        elif (MSG=='L2'):
+            self.__laserPreset__(1)
+        elif (MSG=='L3'):
+            self.__laserPreset__(2)
+        elif (MSG=='L4'):
+            self.__laserPreset__(3)
+        elif (MSG=='L5'):
+            self.__laserPreset__(4)
         elif (MSG=='CU'):
             print "camera up"
             self.lasercambox.cameraUp()
@@ -90,10 +114,23 @@ class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
         elif (MSG=='CO'):
             print "camera stop stream"
             self.__stopStream__()
+        elif (MSG=='C!'):
+            print "camera storage armed"
+            self.storeCamera=True
         elif (MSG=='C1'):
+            self.__cameraPreset__(0)
+        elif (MSG=='C2'):
+            self.__cameraPreset__(1)
+        elif (MSG=='C3'):
+            self.__cameraPreset__(2)
+        elif (MSG=='C4'):
+            self.__cameraPreset__(3)
+        elif (MSG=='C5'):
+            self.__cameraPreset__(4)
+        elif (MSG=='QN'):
             print "camera LED on"
             self.lasercambox.cameraLEDOn()
-        elif (MSG=='C2'):
+        elif (MSG=='QO'):
             print "camera LED off"
             self.lasercambox.cameraLEDOff()
         elif (MSG=='SN'):
@@ -104,7 +141,6 @@ class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
             self.lasercambox.disablePWM()
         else:
             print "unknown commad"
-        #self.lasercambox.updatePWM()
     
     def loop(self):
         iostream = io.StringIO()
@@ -126,6 +162,28 @@ class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
         self.camera_loop.stop()
         self.lasercambox.statusLEDOff(self.STREAM_STATUS_LED)
         
+    def __cameraPreset__(self, position=None):
+        if position==None:
+            return
+        if self.storeCamera:
+            print "storing camera location %i" % (position+1)
+            self.cameraLocation[position]=(self.lasercambox.cameraGetPosition())
+            self.storeCamera = False
+        else:
+            print "goto camera store %i" % (position+1)
+            self.lasercambox.cameraSetPosition(self.cameraLocation[position])
+            
+    def __laserPreset__(self, position=None):
+        if position==None:
+            return
+        if self.storeLaser:
+            print "storing laser location %i" % (position+1)
+            self.laserLocation[position]=(self.lasercambox.laserGetPosition())
+            self.storeLaser = False
+        else:
+            print "goto laser store %i" % (position+1)
+            self.lasercambox.laserSetPosition(self.laserLocation[position])
+                
     def __shutDown__(self):
         self.__stopStream__()
         self.lasercambox.disablePWM()
@@ -135,6 +193,7 @@ class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
         
 # separate HTTP and WebSockets based on URL
 handlers = ([
+    (r"/kill", MyKillRequestHandler),
     (r"/lasercam", MyRequestHandler),
     (r"/ws", MyWebSocketHandler, dict(lasercambox=lasercam.LaserCamBox()))
 ])
@@ -150,4 +209,4 @@ print "start listening on port {}...".format(PORT)
 server.listen(PORT)
 print "start ioloop..."
 tornado.ioloop.IOLoop.instance().start()
-print "should never get here"       
+print "i guess we're done then."       

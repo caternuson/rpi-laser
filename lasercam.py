@@ -25,6 +25,7 @@ class LaserCamBox():
     CAMERA_Y_CHAN       =   1       # PWM channel for camera Y   
     SERVO_MIN           =   205     # minimum PWM value for servo
     SERVO_MAX           =   410     # maximum PWM value for servo
+    DEF_STEP            =   10      # default servo step
     PWM_I2C             =   0x40    # i2c address for PWM controller
     PWM_FREQ            =   50      # frequency in Hz for PWM controller
     
@@ -49,10 +50,10 @@ class LaserCamBox():
         # default values
         self.laserXVal = (LaserCamBox.SERVO_MIN + LaserCamBox.SERVO_MAX)/2
         self.laserYVal = (LaserCamBox.SERVO_MIN + LaserCamBox.SERVO_MAX)/2
-        self.laserStep = 10
+        self.laserStep = self.DEF_STEP
         self.cameraXVal = (LaserCamBox.SERVO_MIN + LaserCamBox.SERVO_MAX)/2
         self.cameraYVal = (LaserCamBox.SERVO_MIN + LaserCamBox.SERVO_MAX)/2
-        self.cameraStep = 10
+        self.cameraStep = self.DEF_STEP
     
     def checkServoValues(self):
         self.laserXVal = self.laserXVal if (self.laserXVal>LaserCamBox.SERVO_MIN) else LaserCamBox.SERVO_MIN
@@ -91,42 +92,86 @@ class LaserCamBox():
         else:
             return None
      
-    def cameraUp(self):
-        self.cameraYVal -= self.cameraStep
+    def cameraUp(self, step=None):
+        if step==None:
+            step=self.cameraStep
+        self.cameraYVal -= step
         self.updatePWM()
         
-    def cameraDown(self):
-        self.cameraYVal += self.cameraStep
+    def cameraDown(self, step=None):
+        if step==None:
+            step=self.cameraStep
+        self.cameraYVal += step
         self.updatePWM()
         
-    def cameraLeft(self):
-        self.cameraXVal -= self.cameraStep
+    def cameraLeft(self, step=None):
+        if step==None:
+            step=self.cameraStep
+        self.cameraXVal -= step
         self.updatePWM()
         
-    def cameraRight(self):
-        self.cameraXVal += self.cameraStep
+    def cameraRight(self, step=None):
+        if step==None:
+            step=self.cameraStep
+        self.cameraXVal += step
         self.updatePWM()
         
-    def laserUp(self):
-        self.laserYVal += self.laserStep
+    def cameraSetPosition(self, position=None):
+        if position==None:
+            return
+        if not isinstance(position, tuple):
+            return
+        if not len(position)==2:
+            return
+        self.cameraXVal=position[0]
+        self.cameraYVal=position[1]
         self.updatePWM()
         
-    def laserDown(self):
-        self.laserYVal -= self.laserStep
+    def cameraGetPosition(self):
+        return (self.cameraXVal, self.cameraYVal)
+        
+    def laserUp(self, step=None):
+        if step==None:
+            step=self.laserStep
+        self.laserYVal += step
         self.updatePWM()
         
-    def laserLeft(self):
-        self.laserXVal -= self.laserStep
+    def laserDown(self, step=None):
+        if step==None:
+            step=self.laserStep
+        self.laserYVal -= step
         self.updatePWM()
         
-    def laserRight(self):
-        self.laserXVal += self.laserStep
+    def laserLeft(self, step=None):
+        if step==None:
+            step=self.laserStep
+        self.laserXVal -= step
         self.updatePWM()
+        
+    def laserRight(self, step=None):
+        if step==None:
+            step=self.laserStep
+        self.laserXVal += step
+        self.updatePWM()
+        
+    def laserSetPosition(self, position=None):
+        if position==None:
+            return
+        if not isinstance(position, tuple):
+            return
+        if not len(position)==2:
+            return
+        self.laserXVal=position[0]
+        self.laserYVal=position[1]
+        self.updatePWM()
+        
+    def laserGetPosition(self):
+        return (self.laserXVal, self.laserYVal)
         
     def laserOn(self):
         GPIO.output(LaserCamBox.LASER_PIN, GPIO.HIGH)
         
-    def laserOff(self, ):
+    def laserOff(self):
         GPIO.output(LaserCamBox.LASER_PIN, GPIO.LOW)
         
     def getLaserState(self):

@@ -14,10 +14,14 @@
                 <button type="button" onclick=ws_send_msg("CD")>DOWN</button>
                 <button type="button" onclick=ws_send_msg("CL")>LEFT</button>
                 <button type="button" onclick=ws_send_msg("CR")>RIGHT</button><br/>
-                <button type="button" onclick=ws_send_msg("C1")>LED ON</button>
-                <button type="button" onclick=ws_send_msg("C2")>LED OFF</button><br/>
-                <button type="button" onclick=ws_send_msg("CN")>START STREAM</button>
-                <button type="button" onclick=ws_send_msg("CO")>STOP STREAM</button>
+                <button type="button" onclick=ws_send_msg("QN")>LED ON</button>
+                <button type="button" onclick=ws_send_msg("QO")>LED OFF</button><br/>
+                <button type="button" onclick=ws_send_msg("C!")>SAVE</button>
+                <button type="button" onclick=ws_send_msg("C1")>1</button>
+                <button type="button" onclick=ws_send_msg("C2")>2</button>
+                <button type="button" onclick=ws_send_msg("C3")>3</button>
+                <button type="button" onclick=ws_send_msg("C4")>4</button>
+                <button type="button" onclick=ws_send_msg("C5")>5</button>
             </td>
             <td align=center valign=top>
                 <button type="button" onclick=ws_send_msg("LU")>UP</button>
@@ -25,10 +29,18 @@
                 <button type="button" onclick=ws_send_msg("LL")>LEFT</button>
                 <button type="button" onclick=ws_send_msg("LR")>RIGHT</button><br/>
                 <button type="button" onclick=ws_send_msg("LN")>LASER ON</button>
-                <button type="button" onclick=ws_send_msg("LO")>LASER OFF</button>                
+                <button type="button" onclick=ws_send_msg("LO")>LASER OFF</button><br/>
+                <button type="button" onclick=ws_send_msg("L!")>SAVE</button>
+                <button type="button" onclick=ws_send_msg("L1")>1</button>
+                <button type="button" onclick=ws_send_msg("L2")>2</button>
+                <button type="button" onclick=ws_send_msg("L3")>3</button>
+                <button type="button" onclick=ws_send_msg("L4")>4</button>
+                <button type="button" onclick=ws_send_msg("L5")>5</button>
             </td>
         </tr>
         <tr><td align=center colspan=2>
+                <button type="button" onclick=ws_send_msg("CN")>START STREAM</button>
+                <button type="button" onclick=ws_send_msg("CO")>STOP STREAM</button><br/>
                 <button type="button" onclick=ws_send_msg("SN")>SERVOS ON</button>
                 <button type="button" onclick=ws_send_msg("SO")>SERVOS OFF</button>
         </td></tr>        
