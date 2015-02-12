@@ -21,6 +21,11 @@ import tornado.websocket
 import tornado.web
 import tornado.ioloop
 
+import pickle
+import os.path
+# location storeage pickle file
+LOCATIONS_PKL = 'locations.pkl'
+
 # define port server will listen to
 PORT = 8008
 
@@ -52,6 +57,7 @@ class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
 
         self.cameraLocation = [None,None,None,None,None]
         self.laserLocation = [None,None,None,None,None]
+        self.__loadLocations__()
         self.storeCamera = False
         self.storeLaser = False
        
@@ -183,6 +189,20 @@ class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
         else:
             print "goto laser store %i" % (position+1)
             self.lasercambox.laserSetPosition(self.laserLocation[position])
+            
+    def __loadLocations__(self):
+        if os.path.isfile(LOCATIONS_PKL):
+            with open(LOCATIONS_PKL,'rb') as PKL:
+                temp = pickle.load(PKL)
+            self.cameraLocation = temp[0]
+            self.laserLocation = temp[1]
+            print "locations loaded"
+            
+    def __saveLocations__(self):
+        temp = [self.cameraLocation,self.laserLocation]
+        with open(LOCATIONS_PKL,'wb') as PKL:
+            pickle.dump(temp, PKL)
+        print "locations saved"
                 
     def __shutDown__(self):
         self.__stopStream__()
@@ -190,6 +210,8 @@ class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
         self.lasercambox.cameraLEDOff()
         self.lasercambox.laserOff()
         self.lasercambox.statusLEDAllOff()
+        self.__saveLocations__()
+
         
 # separate HTTP and WebSockets based on URL
 handlers = ([
