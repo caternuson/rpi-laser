@@ -63,7 +63,8 @@ while not abort:
     lasercambox.laserSetPosition( (sx,sy) )
     time.sleep(0.1)
 
-# Clean up    
+# Clean up
+lasercambox.laserOff()
 lasercambox.statusLEDOff(2)
 lasercambox.disablePWM()
 
