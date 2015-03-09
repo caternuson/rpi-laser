@@ -1,14 +1,22 @@
 rpi-laser
 =========
-
 Python code for the laser camera box.
+
+Laser Cam Box
+=============
+This is main class to be included by all others.
+* **lasercam.py** = defines a class with methods for controlling the laser camera box hardware
 
 Web Interface
 =============
 Provides a camera video stream and control through a web browser. The set up has three parts:
 * **laser_server.py** = the actual server, which uses the Tornado web framework
 * **lasercam.html** = the main web page which includes JavaScript to communicate via WebSocket
-* **lasercam.py** = defines a class with methods for controlling the laser camera box hardware
+
+Wiimote
+=======
+Control the laser with wiimote nunchuk.
+* **laser_wii.py** = pretty simple
 
 watchdog
 ========
