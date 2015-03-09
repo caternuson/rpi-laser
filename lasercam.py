@@ -13,6 +13,7 @@ import picamera
 
 class LaserCamBox():
     
+    AMP_PIN             =   18      # GPIO pin for enabling audio amp
     OE_PIN              =   4       # GPIO pin for PWM enable(LOW)/disable(HIGH)
     LASER_PIN           =   16      # GPIO pin for laser on(HIGH)/off(LOW)
     CAM_LED_PIN         =   20      # white LED for camera
@@ -23,8 +24,10 @@ class LaserCamBox():
     LASER_Y_CHAN        =   3       # PWM channel for laser Y
     CAMERA_X_CHAN       =   0       # PWM channel for camera X
     CAMERA_Y_CHAN       =   1       # PWM channel for camera Y   
-    SERVO_MIN           =   205     # minimum PWM value for servo
-    SERVO_MAX           =   410     # maximum PWM value for servo
+    #SERVO_MIN           =   205     # minimum PWM value for servo
+    #SERVO_MAX           =   410     # maximum PWM value for servo
+    SERVO_MIN           =   130     # minimum PWM value for servo
+    SERVO_MAX           =   600     # maximum PWM value for servo 
     DEF_STEP            =   10      # default servo step
     PWM_I2C             =   0x40    # i2c address for PWM controller
     PWM_FREQ            =   50      # frequency in Hz for PWM controller
@@ -33,6 +36,7 @@ class LaserCamBox():
         # setup GPIO
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)
+        GPIO.setup(LaserCamBox.AMP_PIN,     GPIO.OUT, initial=GPIO.LOW)
         GPIO.setup(LaserCamBox.OE_PIN,      GPIO.OUT, initial=GPIO.HIGH)
         GPIO.setup(LaserCamBox.LASER_PIN,   GPIO.OUT, initial=GPIO.LOW)
         GPIO.setup(LaserCamBox.CAM_LED_PIN, GPIO.OUT, initial=GPIO.LOW)
@@ -116,6 +120,12 @@ class LaserCamBox():
         self.cameraXVal += step
         self.updatePWM()
         
+    def cameraHome(self):
+        self.cameraSetPosition(
+            ( (LaserCamBox.SERVO_MIN + LaserCamBox.SERVO_MAX)/2 ,
+               LaserCamBox.SERVO_MIN )
+            )
+        
     def cameraSetPosition(self, position=None):
         if position==None:
             return
@@ -153,6 +163,12 @@ class LaserCamBox():
             step=self.laserStep
         self.laserXVal += step
         self.updatePWM()
+
+    def laserHome(self):
+        self.laserSetPosition(
+            ( (LaserCamBox.SERVO_MIN + LaserCamBox.SERVO_MAX)/2 ,
+               LaserCamBox.SERVO_MAX )
+            )
         
     def laserSetPosition(self, position=None):
         if position==None:
@@ -210,6 +226,12 @@ class LaserCamBox():
         self.statusLEDOff(1)
         self.statusLEDOff(2)
         self.statusLEDOff(3)
+        
+    def enableAudio(self):
+        GPIO.output(LaserCamBox.AMP_PIN, GPIO.HIGH)
+        
+    def disableAudio(self):
+        GPIO.output(LaserCamBox.AMP_PIN, GPIO.LOW)
     
     
 #===========================================================

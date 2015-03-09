@@ -21,6 +21,7 @@ import tornado.websocket
 import tornado.web
 import tornado.ioloop
 
+import time
 import pickle
 import os.path
 # location storeage pickle file
@@ -28,6 +29,9 @@ LOCATIONS_PKL = 'locations.pkl'
 
 # define port server will listen to
 PORT = 8008
+
+# a single global instance to be used by the server
+theBox = lasercam.LaserCamBox()
 
 #-------------------------------------------------------------------------
 # Tornado Server Setup
@@ -60,6 +64,7 @@ class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
         self.__loadLocations__()
         self.storeCamera = False
         self.storeLaser = False
+        self.camera_loop = None
        
     def open(self):
         print "WS open from {}".format(self.request.remote_ip)
@@ -164,8 +169,10 @@ class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
     
     def __stopStream__(self):
         if (self.lasercambox.camera.previewing):
-            self.lasercambox.camera.stop_preview()            
-        self.camera_loop.stop()
+            self.lasercambox.camera.stop_preview()
+        if (self.camera_loop != None):
+            self.camera_loop.stop()
+            self.camera_loop = None
         self.lasercambox.statusLEDOff(self.STREAM_STATUS_LED)
         
     def __cameraPreset__(self, position=None):
@@ -206,18 +213,20 @@ class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
                 
     def __shutDown__(self):
         self.__stopStream__()
-        self.lasercambox.disablePWM()
+        self.lasercambox.cameraHome()
+        self.lasercambox.laserHome()  
         self.lasercambox.cameraLEDOff()
         self.lasercambox.laserOff()
         self.lasercambox.statusLEDAllOff()
         self.__saveLocations__()
-
+        time.sleep(1)
+        self.lasercambox.disablePWM()
         
 # separate HTTP and WebSockets based on URL
 handlers = ([
     (r"/kill", MyKillRequestHandler),
     (r"/lasercam", MyRequestHandler),
-    (r"/ws", MyWebSocketHandler, dict(lasercambox=lasercam.LaserCamBox()))
+    (r"/ws", MyWebSocketHandler, dict(lasercambox=theBox))
 ])
 
 #===========================
