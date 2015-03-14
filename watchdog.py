@@ -9,32 +9,26 @@
 # 2014-10-11
 # Carter Nelson
 #===========================================================================
+import lasercam
+theBox = lasercam.LaserCamBox()
 
-#-------------------------------
-# import modules
-#-------------------------------
 import os.path
 import time
-import RPi.GPIO as io
-io.setmode(io.BCM)
 
 #-------------------------------
 # set up
 #-------------------------------
-OE_PIN = 4                  # pin that controls servo power
-WATCHDOG_FILE = "/home/pi/rpi-laser/servo.wd"  # file to watch
-MAX_IDLE_TIME = 600         # time in seconds
-
-io.setup(OE_PIN, io.OUT)
+WATCHDOG_FILE = "/home/pi/rpi-laser/servo.wd" # file to watch
+MAX_IDLE_TIME = 600                           # time in seconds
 
 #-------------------------------
 # run the check
 #-------------------------------
 if os.path.exists(WATCHDOG_FILE):
-  ctime = time.time()
-  mtime = os.path.getmtime(WATCHDOG_FILE)
-  dtime = ctime - mtime
+  ctime = time.time()                         # current time
+  mtime = os.path.getmtime(WATCHDOG_FILE)     # time of last modification
+  dtime = ctime - mtime                       # delta time in seconds
   if dtime>MAX_IDLE_TIME:
-    io.output(OE_PIN, io.HIGH)
+    theBox.disablePWM()                       # disable if max time reached
 else:
-  io.output(OE_PIN, io.HIGH)
+  theBox.disablePWM()                         # disable if watchdog file is missing
