@@ -159,11 +159,11 @@ class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
         try:
             self.write_message(base64.b64encode(iostream.getvalue()))
         except tornado.websocket.WebSocketClosedError:
-            self.camera_loop.stop()
+            self.__stopStream__()
             
     def __startStream__(self):
         self.lasercambox.camera.start_preview()
-        self.camera_loop = tornado.ioloop.PeriodicCallback(self.loop, 500)
+        self.camera_loop = tornado.ioloop.PeriodicCallback(self.loop, 1000)
         self.camera_loop.start()
         self.lasercambox.statusLEDOn(self.STREAM_STATUS_LED)
     
