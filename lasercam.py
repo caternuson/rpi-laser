@@ -7,6 +7,7 @@
 # 2014-10-21
 # Carter Nelson
 #===========================================================================
+import os
 from Adafruit_Raspberry_Pi_Python_Code.Adafruit_PWM_Servo_Driver.Adafruit_PWM_Servo_Driver import PWM
 import RPi.GPIO as GPIO
 import picamera
@@ -232,8 +233,15 @@ class LaserCamBox():
         
     def disableAudio(self):
         GPIO.output(LaserCamBox.AMP_PIN, GPIO.LOW)
-    
-    
+        
+    def speak(self, msg=None):
+        self.enableAudio()
+        opt = '-p 20 -s 100'  # espeak options
+        if (msg==None):
+            msg = 'who has my block rockin beets?'
+        os.system('espeak '+opt+' "%s"' % msg)
+        self.disableAudio()
+       
 #===========================================================
 # MAIN
 #===========================================================
