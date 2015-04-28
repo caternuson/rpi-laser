@@ -236,7 +236,7 @@ class LaserCamBox():
         
     def speak(self, msg=None):
         self.enableAudio()
-        opt = '-p 20 -s 100'  # espeak options
+        opt = '-p 45 -s 165'  # espeak options
         if (msg==None):
             msg = 'who has my block rockin beets?'
         os.system('espeak '+opt+' "%s"' % msg)

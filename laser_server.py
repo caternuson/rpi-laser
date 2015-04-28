@@ -33,6 +33,18 @@ PORT = 8008
 # a single global instance to be used by the server
 theBox = lasercam.LaserCamBox()
 
+# dictionary of phrases for audio output
+sound = {}
+sound['S1'] = 'hey cat!'
+sound['S2'] = 'kitty! kitty! kitty!'
+sound['S3'] = 'meeyow'
+sound['S4'] = 'hey, wake up'
+sound['S5'] = 'heres johhny'
+sound['S6'] = 'ha ha ha space cadet'
+sound['S7'] = 'intruder alert! intruder alert! intruder alert!'
+sound['S8'] = 'is any body there?'
+sound['S9'] = 'hello?'
+
 #-------------------------------------------------------------------------
 # Tornado Server Setup
 #-------------------------------------------------------------------------   
@@ -150,6 +162,9 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         elif (MSG=='SO'):
             print "servos off"
             self.lasercambox.disablePWM()
+        elif (MSG in ['S1','S2','S3','S4','S5','S6','S7','S8','S9']):
+            print 'playing sound %s' % (MSG)
+            self.lasercambox.speak(sound[MSG])
         else:
             print "unknown commad"
     
@@ -221,7 +236,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         self.__saveLocations__()
         time.sleep(1)
         self.lasercambox.disablePWM()
-        
+                
 # request handler mapping
 handlers = ([
     (r"/kill",          KillHandler),
