@@ -37,19 +37,19 @@ theBox = lasercam.LaserCamBox()
 # Tornado Server Setup
 #-------------------------------------------------------------------------   
 # this will handle HTTP requests
-class MyKillRequestHandler(tornado.web.RequestHandler):
+class KillHandler(tornado.web.RequestHandler):
     def get(self):
         print "KILL Request from {}".format(self.request.remote_ip)
         tornado.ioloop.IOLoop.instance().stop()
 
 # this will handle HTTP requests
-class MyRequestHandler(tornado.web.RequestHandler):
+class LaserCamHandler(tornado.web.RequestHandler):
     def get(self):
         print "GET Request from {}".format(self.request.remote_ip)
         self.render("lasercam.html")
         
 # this will handle WebSockets requests
-class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
+class WebSocketHandler(tornado.websocket.WebSocketHandler):
     
     def initialize(self, lasercambox):
         self.lasercambox = lasercambox
@@ -222,11 +222,11 @@ class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
         time.sleep(1)
         self.lasercambox.disablePWM()
         
-# separate HTTP and WebSockets based on URL
+# request handler mapping
 handlers = ([
-    (r"/kill", MyKillRequestHandler),
-    (r"/lasercam", MyRequestHandler),
-    (r"/ws", MyWebSocketHandler, dict(lasercambox=theBox))
+    (r"/kill",          KillHandler),
+    (r"/lasercam",      LaserCamHandler),
+    (r"/ws",            WebSocketHandler, dict(lasercambox=theBox))
 ])
 
 #===========================
