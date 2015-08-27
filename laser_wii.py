@@ -59,7 +59,7 @@ while not abort:
         lasercambox.laserOff()
     sx = interp(nunchuk_stick[0],31,229,205,410)
     sy = interp(nunchuk_stick[1],31,229,205,410)
-    print "%i\t%i\t\t%i\t%i" % (nunchuk_stick[0], nunchuk_stick[1], sx, sy)
+    #print "%i\t%i\t\t%i\t%i" % (nunchuk_stick[0], nunchuk_stick[1], sx, sy)
     lasercambox.laserSetPosition( (sx,sy) )
     time.sleep(0.1)
 

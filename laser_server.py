@@ -33,6 +33,11 @@ PORT = 8008
 # a single global instance to be used by the server
 theBox = lasercam.LaserCamBox()
 
+# status LEDs for server
+STREAM_STATUS_LED   = 1     # blinks if camera stream is running
+CONNECT_STATUS_LED  = 1     # on if someone is accessing webpage
+SERVER_STATUS_LED   = 3     # on if server is running
+
 # dictionary of phrases for audio output
 sound = {}
 sound['S1'] = 'hey cat!'
@@ -68,8 +73,6 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         self.lasercambox.enablePWM(update=True)
         self.lasercambox.camera.hflip=True
         self.lasercambox.camera.vflip=True
-        
-        self.STREAM_STATUS_LED = 1
 
         self.cameraLocation = [None,None,None,None,None]
         self.laserLocation = [None,None,None,None,None]
@@ -77,9 +80,14 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         self.storeCamera = False
         self.storeLaser = False
         self.camera_loop = None
-       
+        
+        self.__stream_LED_state = 0
+        self.__blink_rate = 1
+        self.__blink_count = 0
+            
     def open(self):
         print "WS open from {}".format(self.request.remote_ip)
+        self.lasercambox.statusLEDOn(CONNECT_STATUS_LED)
     
     def on_close(self):
         print "WS close"
@@ -163,12 +171,13 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             print "servos off"
             self.lasercambox.disablePWM()
         elif (MSG in ['S1','S2','S3','S4','S5','S6','S7','S8','S9']):
-            print 'playing sound %s' % (MSG)
+            print "playing sound"
             self.lasercambox.speak(sound[MSG])
         else:
             print "unknown commad"
     
     def loop(self):
+        self.__toggle_stream_LED__()
         iostream = io.StringIO()
         self.lasercambox.camera.capture(iostream, 'jpeg', use_video_port=True, resize=(320,240))
         try:
@@ -180,7 +189,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         self.lasercambox.camera.start_preview()
         self.camera_loop = tornado.ioloop.PeriodicCallback(self.loop, 1000)
         self.camera_loop.start()
-        self.lasercambox.statusLEDOn(self.STREAM_STATUS_LED)
+        self.lasercambox.statusLEDOn(STREAM_STATUS_LED)
     
     def __stopStream__(self):
         if (self.lasercambox.camera.previewing):
@@ -188,7 +197,8 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         if (self.camera_loop != None):
             self.camera_loop.stop()
             self.camera_loop = None
-        self.lasercambox.statusLEDOff(self.STREAM_STATUS_LED)
+        #self.lasercambox.statusLEDOff(self.STREAM_STATUS_LED)
+        self.lasercambox.statusLEDOn(CONNECT_STATUS_LED)
         
     def __cameraPreset__(self, position=None):
         if position==None:
@@ -228,14 +238,26 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
                 
     def __shutDown__(self):
         self.__stopStream__()
+        self.lasercambox.enablePWM()
         self.lasercambox.cameraHome()
         self.lasercambox.laserHome()  
         self.lasercambox.cameraLEDOff()
         self.lasercambox.laserOff()
-        self.lasercambox.statusLEDAllOff()
+        self.lasercambox.statusLEDOff(CONNECT_STATUS_LED)
         self.__saveLocations__()
-        time.sleep(1)
+        time.sleep(1) # give servos time to move
         self.lasercambox.disablePWM()
+        
+    def __toggle_stream_LED__(self):
+        self.__blink_count += 1
+        if (self.__blink_count >= self.__blink_rate):
+            self.__blink_count = 0
+            if (self.__stream_LED_state == 0):
+                self.__stream_LED_state = 1
+                self.lasercambox.statusLEDOn(STREAM_STATUS_LED)
+            else:
+                self.__stream_LED_state = 0
+                self.lasercambox.statusLEDOff(STREAM_STATUS_LED)
                 
 # request handler mapping
 handlers = ([
@@ -254,5 +276,7 @@ server = tornado.httpserver.HTTPServer(app)
 print "start listening on port {}...".format(PORT)
 server.listen(PORT)
 print "start ioloop..."
+theBox.statusLEDOn(SERVER_STATUS_LED)
 tornado.ioloop.IOLoop.instance().start()
+theBox.statusLEDOff(SERVER_STATUS_LED)
 print "i guess we're done then."       
