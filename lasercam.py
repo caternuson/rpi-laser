@@ -121,6 +121,11 @@ class LaserCamBox():
         self.cameraXVal += step
         self.updatePWM()
         
+    def cameraMoveRelative(self, amount=(0,0)):
+        self.cameraXVal += amount[0]
+        self.cameraYVal += amount[1]
+        self.updatePWM()
+        
     def cameraHome(self):
         self.cameraSetPosition(
             ( (LaserCamBox.SERVO_MIN + LaserCamBox.SERVO_MAX)/2 ,

@@ -5,7 +5,7 @@
 <body>
     <center>
     <table border=1>
-        <tr><td align=center colspan=2><img id="video" width=320 height=240/></td></tr>
+        <tr><td align=center colspan=2><img onclick="send_coord(event)" id="video" width=320 height=240/></td></tr>
 
         <tr><td bgcolor=#ffffaa align=center>CAMERA CONTROL</td><td bgcolor=#aaffff align=center>LASER CONTROL</td></tr>
         <tr>
@@ -82,6 +82,18 @@
     ws.onmessage = function (messageEvent) {
         video.src = "data:image/jpeg;base64," + messageEvent.data;
     }
+    
+    // send coordinates of image click
+    function send_coord(e) {
+        x = e.offsetX;
+        y = e.offsetY;
+        w = document.getElementById("video").width;
+        h = document.getElementById("video").height;
+        mx = (x - w/2)/2
+        my = (y - h/2)/2
+        ws.send("CM:"+mx+":"+my);
+    }
+    
 </script>
 </body>
 </html>

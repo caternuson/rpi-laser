@@ -25,7 +25,7 @@ import time
 import pickle
 import os.path
 # location storeage pickle file
-LOCATIONS_PKL = 'locations.pkl'
+LOCATIONS_PKL = '/home/pi/rpi-laser/locations.pkl'
 
 # define port server will listen to
 PORT = 8008
@@ -40,15 +40,15 @@ SERVER_STATUS_LED   = 3     # on if server is running
 
 # dictionary of phrases for audio output
 sound = {}
-sound['S1'] = 'hey cat!'
-sound['S2'] = 'kitty! kitty! kitty!'
-sound['S3'] = 'meeyow'
-sound['S4'] = 'hey, wake up'
-sound['S5'] = 'heres johhny'
-sound['S6'] = 'ha ha ha space cadet'
-sound['S7'] = 'intruder alert! intruder alert! intruder alert!'
-sound['S8'] = 'is any body there?'
-sound['S9'] = 'hello?'
+sound['S1'] = 'lee luh!'
+sound['S2'] = 'hey dog!'
+sound['S3'] = 'lee luh dog'
+sound['S4'] = 'lee luh has a stinky butt'
+sound['S5'] = 'roof roof roof'
+sound['S6'] = 'meow meow'
+sound['S7'] = 'destroy all humor its'
+sound['S8'] = 'bleep blue blop bleep'
+sound['S9'] = 'ha ha ha ha'
 
 #-------------------------------------------------------------------------
 # Tornado Server Setup
@@ -170,6 +170,11 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         elif (MSG=='SO'):
             print "servos off"
             self.lasercambox.disablePWM()
+        elif (MSG.startswith("CM")):
+            x = int(float(MSG.split(":")[1]))
+            y = int(float(MSG.split(":")[2]))
+            self.lasercambox.cameraMoveRelative((x,y))           
+            print "camera relative move %i, %i" % (x,y)
         elif (MSG in ['S1','S2','S3','S4','S5','S6','S7','S8','S9']):
             print "playing sound"
             self.lasercambox.speak(sound[MSG])
