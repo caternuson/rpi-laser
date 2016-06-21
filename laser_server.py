@@ -1,4 +1,3 @@
-#!/usr/bin/python
 #===========================================================================
 # laser_server.py
 #
@@ -11,8 +10,9 @@
 # 2014-10-22
 # Carter Nelson
 #===========================================================================
-import lasercam
-
+import time
+import pickle
+import os.path
 import cStringIO as io
 import base64
 
@@ -21,9 +21,8 @@ import tornado.websocket
 import tornado.web
 import tornado.ioloop
 
-import time
-import pickle
-import os.path
+import lasercam
+
 # location storeage pickle file
 LOCATIONS_PKL = '/home/pi/rpi-laser/locations.pkl'
 
@@ -46,27 +45,29 @@ sound['S3'] = 'lee luh dog'
 sound['S4'] = 'lee luh has a stinky butt'
 sound['S5'] = 'roof roof roof'
 sound['S6'] = 'meow meow'
-sound['S7'] = 'destroy all humor its'
-sound['S8'] = 'bleep blue blop bleep'
-sound['S9'] = 'ha ha ha ha'
+sound['S7'] = 'is that you, santa claws'
+sound['S8'] = 'who wants to play video games'
+sound['S9'] = 'i can see you'
 
 #-------------------------------------------------------------------------
 # Tornado Server Setup
 #-------------------------------------------------------------------------   
-# this will handle HTTP requests
 class KillHandler(tornado.web.RequestHandler):
+    """RequestHandler that stops the server."""
+    
     def get(self):
         print "KILL Request from {}".format(self.request.remote_ip)
         tornado.ioloop.IOLoop.instance().stop()
 
-# this will handle HTTP requests
 class LaserCamHandler(tornado.web.RequestHandler):
+    """RequestHandlder for main page."""
+    
     def get(self):
         print "GET Request from {}".format(self.request.remote_ip)
         self.render("lasercam.html")
         
-# this will handle WebSockets requests
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
+    """WebSocketHandler for web socket communications."""
     
     def initialize(self, lasercambox):
         self.lasercambox = lasercambox
@@ -263,25 +264,26 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             else:
                 self.__stream_LED_state = 0
                 self.lasercambox.statusLEDOff(STREAM_STATUS_LED)
-                
-# request handler mapping
+
 handlers = ([
+#      URL              HANDLER
     (r"/kill",          KillHandler),
     (r"/lasercam",      LaserCamHandler),
     (r"/ws",            WebSocketHandler, dict(lasercambox=theBox))
 ])
 
-#===========================
+#===========================================================
 # MAIN
-#===========================
-print "create app..."
-app = tornado.web.Application(handlers)
-print "create http server..."
-server = tornado.httpserver.HTTPServer(app)
-print "start listening on port {}...".format(PORT)
-server.listen(PORT)
-print "start ioloop..."
-theBox.statusLEDOn(SERVER_STATUS_LED)
-tornado.ioloop.IOLoop.instance().start()
-theBox.statusLEDOff(SERVER_STATUS_LED)
-print "i guess we're done then."       
+#===========================================================
+if __name__ == '__main__':
+    print "create app..."
+    app = tornado.web.Application(handlers)
+    print "create http server..."
+    server = tornado.httpserver.HTTPServer(app)
+    print "start listening on port {}...".format(PORT)
+    server.listen(PORT)
+    print "start ioloop..."
+    theBox.statusLEDOn(SERVER_STATUS_LED)
+    tornado.ioloop.IOLoop.instance().start()
+    theBox.statusLEDOff(SERVER_STATUS_LED)
+    print "i guess we're done then."       

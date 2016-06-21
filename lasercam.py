@@ -1,4 +1,3 @@
-#!/usr/bin/python
 #===========================================================================
 # lasercam.py
 #
@@ -8,11 +7,13 @@
 # Carter Nelson
 #===========================================================================
 import os
-from Adafruit_Raspberry_Pi_Python_Code.Adafruit_PWM_Servo_Driver.Adafruit_PWM_Servo_Driver import PWM
+
 import RPi.GPIO as GPIO
 import picamera
+from Adafruit_PCA9685 import PCA9685 as PWM
 
 class LaserCamBox():
+    """Provides hardware interface to laser/camera box."""
     
     AMP_PIN             =   18      # GPIO pin for enabling audio amp
     OE_PIN              =   4       # GPIO pin for PWM enable(LOW)/disable(HIGH)
@@ -46,8 +47,8 @@ class LaserCamBox():
         GPIO.setup(LaserCamBox.LED3_PIN,    GPIO.OUT, initial=GPIO.LOW)
         
         # the PWM controller
-        self.PWM = PWM(LaserCamBox.PWM_I2C, debug=False)
-        self.PWM.setPWMFreq(LaserCamBox.PWM_FREQ)
+        self.PWM = PWM(LaserCamBox.PWM_I2C)
+        self.PWM.set_pwm_freq(LaserCamBox.PWM_FREQ)
         
         # the camera
         self.camera = picamera.PiCamera()
@@ -72,10 +73,10 @@ class LaserCamBox():
         
     def updatePWM(self):
         self.checkServoValues()
-        self.PWM.setPWM(LaserCamBox.LASER_X_CHAN, 0, self.laserXVal)
-        self.PWM.setPWM(LaserCamBox.LASER_Y_CHAN, 0, self.laserYVal)
-        self.PWM.setPWM(LaserCamBox.CAMERA_X_CHAN, 0, self.cameraXVal)
-        self.PWM.setPWM(LaserCamBox.CAMERA_Y_CHAN, 0, self.cameraYVal)
+        self.PWM.set_pwm(LaserCamBox.LASER_X_CHAN, 0, self.laserXVal)
+        self.PWM.set_pwm(LaserCamBox.LASER_Y_CHAN, 0, self.laserYVal)
+        self.PWM.set_pwm(LaserCamBox.CAMERA_X_CHAN, 0, self.cameraXVal)
+        self.PWM.set_pwm(LaserCamBox.CAMERA_Y_CHAN, 0, self.cameraYVal)
         
     def enablePWM(self, update=False):
         GPIO.output(LaserCamBox.OE_PIN, GPIO.LOW)
