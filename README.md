@@ -30,6 +30,7 @@ A brief description of the various software components.
 # Dependencies
 * Tornado Web Framework
 * Adafruit I2C PWM servo controller Python code
+* picamera
 * espeak
 
 # Install
@@ -57,3 +58,7 @@ This is a safety mechanism to disable the servo controller after a period of tim
 The python program ```watchdog.py``` is run periodically from a ```cron``` job.
 It looks at the file ```servo.wd``` and disables the servo controller if that file has not been
 touched for a period of time.
+
+# Automation
+Follow [this](https://learn.adafruit.com/running-programs-automatically-on-your-tiny-computer/overview)
+tutorial for setting up SysV or systemd to run the server at boot.
