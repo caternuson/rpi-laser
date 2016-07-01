@@ -14,8 +14,12 @@ Python 2.7 code for the laser camera box.
 * [Adafruit Audio Amp](https://www.adafruit.com/products/1552)
 * [Adafruit Enclosed Speakers](https://www.adafruit.com/product/1669)
 * [Adafruit 1 Watt White LED](https://www.adafruit.com/products/518)
+* [Adafruit 5V 1A Power Supply](https://www.adafruit.com/product/276)
+* [Adafruit Panel Mount 2.1mm DC Barrel Jack](https://www.adafruit.com/products/610)
 * some custom boards
-* LEDs
+* various 5mm LEDs
+* current limiting resistors
+* trim pots
 * transistors
 * cigar box
 
