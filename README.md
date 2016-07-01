@@ -31,7 +31,7 @@ A brief description of the various software components.
 
 # Dependencies
 * [Tornado Web Framework](https://pypi.python.org/pypi/tornado)
-* [Adafruit I2C PWM servo controller Python code](https://github.com/adafruit/Adafruit_Python_PCA9685)
+* [Adafruit PCA9685 Python library](https://github.com/adafruit/Adafruit_Python_PCA9685)
 * Raspberry Pi camera
 * eSpeak multi-lingual software speech synthesizer
     * ```sudo apt-get install espeak```
