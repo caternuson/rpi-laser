@@ -180,7 +180,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             print "playing sound"
             self.lasercambox.speak(sound[MSG])
         else:
-            print "unknown commad"
+            print "unknown command"
     
     def loop(self):
         self.__toggle_stream_LED__()
