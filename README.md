@@ -9,10 +9,10 @@ Python 2.7 code for the laser camera box.
 * USB wifi dongle
 * USB bluetooth dongle
 * 4 hobby servos
-* [Adafruit diode lase](https://www.adafruit.com/products/1054)
-* [Adafruit I2C PWM servo board](https://www.adafruit.com/products/815)
-* [Adafruit audio amp](https://www.adafruit.com/products/1552)
-* [Adafruit enclosed speakers](https://www.adafruit.com/product/1669)
+* [Adafruit Diode Laser](https://www.adafruit.com/products/1054)
+* [Adafruit I2C PWM Servo Board](https://www.adafruit.com/products/815)
+* [Adafruit Audio Amp](https://www.adafruit.com/products/1552)
+* [Adafruit Enclosed Speakers](https://www.adafruit.com/product/1669)
 * some custom boards
 * LEDs
 * transistors
