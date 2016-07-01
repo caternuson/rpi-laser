@@ -30,10 +30,11 @@ A brief description of the various software components.
 * ```photo_scan.py``` - takes a series of photos over the range of servo motion
 
 # Dependencies
-* Tornado Web Framework
-* Adafruit I2C PWM servo controller Python code
-* picamera
-* espeak
+* [Tornado Web Framework](https://pypi.python.org/pypi/tornado)
+* [Adafruit I2C PWM servo controller Python code](https://github.com/adafruit/Adafruit_Python_PCA9685)
+* Raspberry Pi camera
+* eSpeak multi-lingual software speech synthesizer
+    * ```sudo apt-get install espeak```
 
 # Install
 Simply clone this repo and run the server:
@@ -42,6 +43,7 @@ $ git clone https://github.com/caternuson/rpi-laser.git
 $ cd rpi-laser
 $ sudo python laser_server.py
 ```
+This will start a server which you can access via a web browser.
 
 # Configure
 Set the ```PORT``` to desired port to be used by server:
