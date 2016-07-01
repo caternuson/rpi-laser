@@ -7,7 +7,7 @@ Python 2.7 code for the laser camera box.
 * Raspberry Pi Model B+
 * Raspberry Pi camera module
 * [Adafruit USB wifi dongle](https://www.adafruit.com/products/2810)
-* [Adafruit USB bluetooth dongle](https://www.adafruit.com/products/1327)
+* [Adafruit USB bluetooth dongle](https://www.adafruit.com/products/1327) (for Wii Remote control)
 * [Adafruit Diode Laser](https://www.adafruit.com/products/1054)
 * [Adafruit I2C PWM Servo Board](https://www.adafruit.com/products/815)
 * [Adafruit Audio Amp](https://www.adafruit.com/products/1552)
