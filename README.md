@@ -53,6 +53,8 @@ Set the phrases output on the speaker:
 sound = {}
 sound['S1'] = 'hello world'
 sound['S2'] = 'halt! who goes there?'
+  :
+sound['S9'] = 'im the last word'
 ```
 
 # Watchdog
