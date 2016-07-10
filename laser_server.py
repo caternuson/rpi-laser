@@ -40,15 +40,15 @@ SERVER_STATUS_LED   = 3     # on if server is running
 
 # dictionary of phrases for audio output
 sound = {}
-sound['S1'] = 'lee luh!'
-sound['S2'] = 'hey dog!'
-sound['S3'] = 'lee luh dog'
-sound['S4'] = 'lee luh has a stinky butt'
-sound['S5'] = 'roof roof roof'
-sound['S6'] = 'meow meow'
-sound['S7'] = 'is that you, santa claws'
-sound['S8'] = 'who wants to play video games'
-sound['S9'] = 'i can see you'
+sound['S1'] = 'hey cat!'
+sound['S2'] = 'meow'
+sound['S3'] = 'kitty!'
+sound['S4'] = 'i can not do that dave'
+sound['S5'] = 'sound 5'
+sound['S6'] = 'sound 6'
+sound['S7'] = 'sound 7'
+sound['S8'] = 'sound 8'
+sound['S9'] = 'sound 9'
 
 #-------------------------------------------------------------------------
 # Tornado Server Setup
@@ -181,7 +181,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             print "playing sound"
             self.lasercambox.speak(sound[MSG])
         else:
-            print "unknown commad"
+            print "unknown command"
     
     def loop(self):
         self.__toggle_stream_LED__()

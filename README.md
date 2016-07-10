@@ -1,20 +1,28 @@
-# rpi-laser
+# Domo R.E. Gato - the cat friend roboto
+
 ![thumbnail](http://caternuson.github.io/rpi-laser-thumb.jpg)<br/>
 Python 2.7 code for the laser camera box.
 
 # Hardware
 * Raspberry Pi Model B+
 * Raspberry Pi camera module
-* USB wifi dongle
-* USB bluetooth dongle
-* 4 hobby servos
-* laser
-* Adafruit I2C PWM servo board
-* audio amp
-* speaker
+* [Adafruit USB wifi dongle](https://www.adafruit.com/products/2810)
+* [Adafruit USB bluetooth dongle](https://www.adafruit.com/products/1327) (for Wii Remote control)
+* [Adafruit Diode Laser](https://www.adafruit.com/products/1054)
+* [Adafruit I2C PWM Servo Board](https://www.adafruit.com/products/815)
+* [Adafruit Audio Amp](https://www.adafruit.com/products/1552)
+* [Adafruit Enclosed Speakers](https://www.adafruit.com/product/1669)
+* [Adafruit 1 Watt White LED](https://www.adafruit.com/products/518)
+* [Adafruit 5V 2A Power Supply](https://www.adafruit.com/product/276)
+* [Adafruit Panel Mount 2.1mm DC Barrel Jack](https://www.adafruit.com/products/610)
+* Standard size hobby servos x 4
 * some custom boards
-* LEDs
+* various 5mm LEDs
+* current limiting resistors
+* trim pots
+* transistors
 * cigar box
+* cat (optional)
 
 # Software
 A brief description of the various software components.
@@ -28,10 +36,10 @@ A brief description of the various software components.
 * ```photo_scan.py``` - takes a series of photos over the range of servo motion
 
 # Dependencies
-* Tornado Web Framework
-* Adafruit I2C PWM servo controller Python code
-* picamera
-* espeak
+* [Tornado Web Framework](https://pypi.python.org/pypi/tornado)
+* [Adafruit PCA9685 Python library](https://github.com/adafruit/Adafruit_Python_PCA9685)
+* eSpeak multi-lingual software speech synthesizer
+    * ```sudo apt-get install espeak```
 
 # Install
 Simply clone this repo and run the server:
@@ -40,6 +48,7 @@ $ git clone https://github.com/caternuson/rpi-laser.git
 $ cd rpi-laser
 $ sudo python laser_server.py
 ```
+This will start a server which you can access via a web browser.
 
 # Configure
 Set the ```PORT``` to desired port to be used by server:
@@ -51,6 +60,8 @@ Set the phrases output on the speaker:
 sound = {}
 sound['S1'] = 'hello world'
 sound['S2'] = 'halt! who goes there?'
+  :
+sound['S9'] = 'im the last word'
 ```
 
 # Watchdog
