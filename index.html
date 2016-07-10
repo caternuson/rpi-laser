@@ -1,1 +1,91 @@
-Place holder
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body class="bd-docs">
+<div class="container">
+  <p>
+    <h1>DOMO R.E. GATO</h1>
+    <h5>The cat friend roboto.</h5>
+    <a class="btn btn-primary" target="_blank" href="https://github.com/caternuson/rpi-laser">View on GitHub</a>  
+  </p>      
+</div>
+<div class="container">
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#tab_home"><span class="material-icons">home</span></a></li>
+    <li><a data-toggle="tab" href="#tab_software"><span class="material-icons">computer</span></a></li>
+    <li><a data-toggle="tab" href="#tab_build"><span class="material-icons">settings</span></a></li>
+  </ul>
+  <div class="tab-content">
+    <div id="tab_home" class="tab-pane active">
+      <p>
+      <figure>
+        <img class="img-rounded img-responsive" src="static/rpi-laser-glamshot.jpg"/>
+        <figcaption class="small"><strong>The robot.</strong></figcaption>
+      </figure>
+      </p>
+      <p>
+        A remotely controllable cat taunting robot. Includes camera for remote
+        monitoring, laser for classic taunting, speaker for audio tauting, as
+        well as local control with Wii remote via bluetooth.
+      </p>
+      <p><br/></p>
+    </div>
+    <div id="tab_software" class="tab-pane">
+      <h2>SOFTWARE</h2>
+      <p>
+        The software is available on <a target="_blank" href="https://github.com/caternuson/rpi-laser">GitHub</a>.
+      </p>
+    </div>
+    <div id="tab_build" class="tab-pane">
+      <h2>HARDWARE</h2>
+      <p>
+        Here are some details about the hardware.
+        The overall parts are shown below.
+        <figure>
+          <img class="img-rounded img-responsive" src="static/rpi-laser-exploded-labels.jpg"/>
+          <figcaption class="small"><strong>(1) RPi Model B+ with Wifi and Bluetooth
+          USB dongles, (2) Custom transitor board,
+          (3) Custom LED driver board, (4) Audio amp, (5) Speaker, (6) PWM servo controller,
+          (7) Laser servos, (8) Camera servos.</strong></figcaption>
+        </figure>
+      </p>
+      <p>
+        The two custom boards are shown below. The one on the right is for general
+        purpose power switching using three transistor controlled via the Rpi
+        GPIO pins. The one on the left is also for power switching,
+        but also includes three pots which act as current limiting
+        resistors for attached LEDs. This allows for custom trimming of individual
+        LED brightness.
+        <figure>
+          <img class="img-rounded img-responsive" src="static/rpi-laser-boards.jpg"/>
+          <figcaption class="small"><strong>Custom boards. Left for LEDs. Right
+          for general purpose.</strong></figcaption>
+        </figure>
+      </p>
+      <p>
+        A Raspberry Pi v1 camera module and super bright white LED are mounted
+        on one set of servos.
+        <figure>
+          <img class="img-rounded img-responsive" src="static/rpi-laser-camera-detail.jpg"/>
+          <figcaption class="small"><strong>RPi camera and LED.</strong></figcaption>
+        </figure>
+      </p>
+      <p>
+        A LED laser is mounted on the other set of servos.
+        <figure>
+          <img class="img-rounded img-responsive" src="static/rpi-laser-laser-detail.jpg"/>
+          <figcaption class="small"><strong>The "laser".</strong></figcaption>
+        </figure>
+      </p>
+    </div>
+  </div>
+</div>
+</body>  
+</html>
