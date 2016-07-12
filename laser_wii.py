@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 #===========================================================================
 # laser_wii.py
 #
@@ -10,12 +10,21 @@
 # 2015-03-09
 # Carter Nelson
 #===========================================================================
-import lasercam
-import cwiid
 import time
 
-# Does python not have a built in for this?
+import lasercam
+import cwiid
+
+NUNCHUK_MIN = 31
+NUNCHUK_MAX = 229
+SERVO_MIN = 205
+SERVO_MAX = 410
+
+lasercambox = lasercam.LaserCamBox()
+lasercambox.enablePWM(update=True)
+
 def interp(xval, xmin, xmax, ymin, ymax):
+    """Linear interpolation."""
     xval = xmin if (xval<xmin) else xval
     xval = xmax if (xval>xmax) else xval
     xv = float(xval)
@@ -26,11 +35,6 @@ def interp(xval, xmin, xmax, ymin, ymax):
     xi = yn + (xv-xn) * ((yx-yn)/(xx-xn))
     return int(xi)
     
-# Setup laser cam box
-lasercambox = lasercam.LaserCamBox()
-lasercambox.enablePWM(update=True)
-
-# Sync wiimote
 for x in xrange(1,5):
     lasercambox.statusLEDOn(2)
     time.sleep(0.5)
@@ -46,7 +50,6 @@ lasercambox.statusLEDOn(2)
 
 abort = False
     
-# Loop until something
 while not abort:
     buttons = wiimote.state['buttons']
     nunchuk_buttons = wiimote.state['nunchuk']['buttons']
@@ -57,14 +60,11 @@ while not abort:
         lasercambox.laserOn()
     else:
         lasercambox.laserOff()
-    sx = interp(nunchuk_stick[0],31,229,205,410)
-    sy = interp(nunchuk_stick[1],31,229,205,410)
-    #print "%i\t%i\t\t%i\t%i" % (nunchuk_stick[0], nunchuk_stick[1], sx, sy)
+    sx = interp(nunchuk_stick[0],NUNCHUK_MIN,NUNCHUK_MAX,SERVO_MIN,SERVO_MAX)
+    sy = interp(nunchuk_stick[1],NUNCHUK_MIN,NUNCHUK_MAX,SERVO_MIN,SERVO_MAX)
     lasercambox.laserSetPosition( (sx,sy) )
-    time.sleep(0.1)
+    time.sleep(0.05)
 
-# Clean up
 lasercambox.laserOff()
 lasercambox.statusLEDOff(2)
 lasercambox.disablePWM()
-
