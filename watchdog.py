@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 #===========================================================================
 # watchdog.py
 #
@@ -9,11 +9,12 @@
 # 2014-10-11
 # Carter Nelson
 #===========================================================================
-import lasercam
-theBox = lasercam.LaserCamBox()
-
 import os.path
 import time
+
+import lasercam
+
+theBox = lasercam.LaserCamBox()
 
 #-------------------------------
 # set up
