@@ -1,4 +1,5 @@
 *.jpg
 *.pyc
 *.pkl
+servo.wd
 test/
