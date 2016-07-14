@@ -36,6 +36,8 @@ A brief description of the various software components.
 * ```servo.wd``` - file watched by watchdog
 
 # Dependencies
+* [picamera](https://picamera.readthedocs.io) for using RPi camera module
+* [RPi.GPIO](https://pypi.python.org/pypi/RPi.GPIO)
 * [Tornado Web Framework](https://pypi.python.org/pypi/tornado)
 * [Adafruit PCA9685 Python library](https://github.com/adafruit/Adafruit_Python_PCA9685)
 * [eSpeak](http://espeak.sourceforge.net/) multi-lingual software speech synthesizer
