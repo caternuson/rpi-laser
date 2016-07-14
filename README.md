@@ -66,9 +66,9 @@ sound['S2'] = 'halt! who goes there?'
 sound['S9'] = 'im the last word'
 ```
 
-# Watchdog
+# Watchdog (optional)
 This is a safety mechanism to disable the servo controller after a period of time.
-The python program ```watchdog.py``` is run periodically from a ```cron``` job.
+The python program ```watchdog.py``` can be run periodically from a ```cron``` job.
 It looks at the file ```servo.wd``` and disables the servo controller if that file has not been
 touched for a period of time.
 
