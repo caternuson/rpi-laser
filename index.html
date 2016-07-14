@@ -10,11 +10,21 @@
 </head>
 <body class="bd-docs">
 <div class="container">
+  <div class="row">
+  <div class="col-xs-10"> 
   <p>
     <h1>DOMO R.E. GATO</h1>
     <h5>The cat friend roboto.</h5>
     <a class="btn btn-primary" target="_blank" href="https://github.com/caternuson/rpi-laser">View on GitHub</a>  
-  </p>      
+  </p>
+  </div>
+  <div class="col-xs-2">
+  <figure>
+  <h1><img src="static/sabo.jpg" class="img-responsive img-circle pull-right"/></h1>
+  <figcaption class="small text-center"><strong>Dedicated to Sabotage.</strong></figcaption>
+  </figure>
+  </div>
+  </div>
 </div>
 <div class="container">
   <ul class="nav nav-tabs" role="tablist">
@@ -46,7 +56,10 @@
     <div role="tabpanel" id="tab_build" class="tab-pane">
       <h2>HARDWARE</h2>
       <p>
-        Here are some details about the hardware.
+        <div class="alert alert-info" role="alert">Documentation still in work. [2016:7:14]</div>
+      </p>
+      <p>
+        Here are some details about the hardware. Everything is housed in a cigar box.
         The overall parts are shown below.
         <figure>
           <img class="img-rounded img-responsive" src="static/rpi-laser-exploded-labels.jpg"/>
@@ -57,8 +70,24 @@
         </figure>
       </p>
       <p>
+        Parts List:
+        <ul>
+          <li>Raspberry Pi Model B+</li>
+          <li>Raspberry Pi camera module</li>
+          <li><a href="https://www.adafruit.com/products/2810">Adafruit USB wifi dongle</a></li>
+          <li><a href="https://www.adafruit.com/products/1327">Adafruit USB bluetooth dongle</a> (for Wii Remote control)</li>
+          <li><a href="https://www.adafruit.com/products/1054">Adafruit Diode Laser</a></li>
+          <li><a href="https://www.adafruit.com/products/815">Adafruit I2C PWM Servo Board</a></li>
+          <li><a href="https://www.adafruit.com/products/1552">Adafruit Audio Amp</a></li>
+          <li><a href="https://www.adafruit.com/product/1669">Adafruit Enclosed Speakers</a></li>
+          <li><a href="https://www.adafruit.com/products/518">Adafruit 1 Watt White LED</a></li>
+          <li><a href="https://www.adafruit.com/product/276">Adafruit 5V 2A Power Supply</a></li>
+          <li><a href="https://www.adafruit.com/products/610">Adafruit Panel Mount 2.1mm DC Barrel Jack</a></li>
+        </ul>
+      </p>
+      <p>
         The two custom boards are shown below. The one on the right is for general
-        purpose power switching using three transistor controlled via the Rpi
+        purpose power switching using three transistor controlled via the RPi
         GPIO pins. The one on the left is also for power switching,
         but also includes three pots which act as current limiting
         resistors for attached LEDs. This allows for custom trimming of individual
