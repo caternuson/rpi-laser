@@ -17,10 +17,12 @@ Python 2.7 code for the laser camera box.
 * [Adafruit Panel Mount 2.1mm DC Barrel Jack](https://www.adafruit.com/products/610)
 * Standard size hobby servos x 4
 * some custom boards
-* various 5mm LEDs
+* various LEDs
 * current limiting resistors
 * trim pots
 * transistors
+* switches
+* cables
 * cigar box
 * cat (optional)
 
