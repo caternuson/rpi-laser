@@ -44,7 +44,7 @@ A brief description of the various software components.
 * [CWiid](https://github.com/abstrakraft/cwiid) for Wiimote control
 
 # Install
-Simply clone this repo and run the server:
+First, install all of the software dependencies listed above. Then, simply clone this repo and run the server:
 ```
 $ git clone https://github.com/caternuson/rpi-laser.git
 $ cd rpi-laser
