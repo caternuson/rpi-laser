@@ -34,14 +34,13 @@ A brief description of the various software components.
 * ```laser_wii.py``` - provides Wiimote control of camera and laser
 * ```watchdog.py``` - watchdog to turn off servo power
 * ```servo.wd``` - file watched by watchdog
-* ```laser_curses.py``` - a curses interface for control
-* ```photo_scan.py``` - takes a series of photos over the range of servo motion
 
 # Dependencies
 * [Tornado Web Framework](https://pypi.python.org/pypi/tornado)
 * [Adafruit PCA9685 Python library](https://github.com/adafruit/Adafruit_Python_PCA9685)
 * [eSpeak](http://espeak.sourceforge.net/) multi-lingual software speech synthesizer
     * ```sudo apt-get install espeak```
+* [CWiid](https://github.com/abstrakraft/cwiid) for Wiimote control
 
 # Install
 Simply clone this repo and run the server:
