@@ -72,6 +72,6 @@ The python program ```watchdog.py``` can be run periodically from a ```cron``` j
 It looks at the file ```servo.wd``` and disables the servo controller if that file has not been
 touched for a period of time.
 
-# Automation
+# Automation (optional)
 Follow [this](https://learn.adafruit.com/running-programs-automatically-on-your-tiny-computer/overview)
 tutorial for setting up SysV or systemd to run the server at boot.
