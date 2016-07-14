@@ -17,8 +17,10 @@ import cwiid
 
 NUNCHUK_MIN = 31
 NUNCHUK_MAX = 229
-SERVO_MIN = 205
-SERVO_MAX = 410
+#SERVO_MIN = 205     # linear
+#SERVO_MAX = 410     # linear
+SERVO_MIN = 130     # non-linear
+SERVO_MAX = 600     # non-linear
 
 lasercambox = lasercam.LaserCamBox()
 lasercambox.enablePWM(update=True)
@@ -40,16 +42,17 @@ for x in xrange(1,5):
     time.sleep(0.5)
     lasercambox.statusLEDOff(2)
     time.sleep(0.5)
-print "Press 1+2 on Wiimote now."
+print "Press 1+2 on Wiimote now..."
 wiimote = cwiid.Wiimote()  
 wiimote.led = 9
 wiimote.rpt_mode = cwiid.RPT_BTN | cwiid.RPT_EXT
 time.sleep(1)
-print "Connected"
+print "Connected."
 lasercambox.statusLEDOn(2)
 
 abort = False
     
+print "Press A to quit."
 while not abort:
     buttons = wiimote.state['buttons']
     nunchuk_buttons = wiimote.state['nunchuk']['buttons']
