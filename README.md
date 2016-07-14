@@ -50,7 +50,7 @@ $ git clone https://github.com/caternuson/rpi-laser.git
 $ cd rpi-laser
 $ sudo python laser_server.py
 ```
-This will start a server which you can access via a web browser.
+This will start a server which you can access via a web browser at: `http://RPI ADDRESS:PORT/lasercam`. Where `RPI ADDRESS` is the IP address of the Raspberry Pi running the server and `PORT` is the value set below.
 
 # Configure
 Set the ```PORT``` to desired port to be used by server:
