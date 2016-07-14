@@ -1,5 +1,4 @@
-# Domo R.E. Gato
-### the cat friend roboto
+# Domo R.E. Gato - the cat friend roboto
 
 ![thumbnail](http://caternuson.github.io/rpi-laser-thumb.jpg)<br/>
 Python 2.7 code for the laser camera box.
