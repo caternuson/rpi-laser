@@ -9,8 +9,10 @@
 import os
 
 import RPi.GPIO as GPIO
-import picamera
 from Adafruit_PCA9685 import PCA9685 as PWM
+
+import picamera
+import mjpgstream_thread
 
 class LaserCamBox():
     """Provides hardware interface to laser/camera box."""
@@ -48,7 +50,8 @@ class LaserCamBox():
         self.PWM = PWM(LaserCamBox.PWM_I2C)
         self.PWM.set_pwm_freq(LaserCamBox.PWM_FREQ)
         
-        self.camera = picamera.PiCamera()
+        self.camera = picamera.PiCamera(sensor_mode=5)
+        self._mjpgstream_thread = None        
         
         self.laserXVal = (LaserCamBox.SERVO_MIN + LaserCamBox.SERVO_MAX)/2
         self.laserYVal = (LaserCamBox.SERVO_MIN + LaserCamBox.SERVO_MAX)/2
@@ -152,6 +155,31 @@ class LaserCamBox():
         self.cameraXVal=position[0]
         self.cameraYVal=position[1]
         self.updatePWM()
+        
+    def mjpgstream_start(self, port=8081):
+        """Start thread to serve MJPG stream on specified port."""
+        if not self._mjpgstream_thread == None:
+            return
+        #camera = self.__update_camera(self.camera)        
+        kwargs = {'camera':self.camera, 'port':port, 'resize':(640,360)}
+        self._mjpgstream_thread = mjpgstream_thread.MJPGStreamThread(kwargs=kwargs)
+        self._mjpgstream_thread.start()
+        while not self._mjpgstream_thread.streamRunning:
+            pass
+    
+    def mjpgstream_stop(self, ):
+        """Stop the MJPG stream, if running."""
+        if not self._mjpgstream_thread == None:
+            if self._mjpgstream_thread.is_alive():
+                self._mjpgstream_thread.stop()
+            self._mjpgstream_thread = None
+                
+    def mjpgstream_is_alive(self, ):
+        """Return True if stream is running, False otherwise."""
+        if self._mjpgstream_thread == None:
+            return False
+        else:
+            return self._mjpgstream_thread.is_alive()
         
     def cameraGetPosition(self):
         """Return the current camera position."""
