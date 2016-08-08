@@ -55,7 +55,7 @@ This will start a server which you can access via a web browser at: `http://RPI 
 # Configure
 Set the ```PORT``` to desired port to be used by server:
 ```python
-PORT = 8008
+PORT = 8080
 ```
 Set the phrases output on the speaker:
 ```python
