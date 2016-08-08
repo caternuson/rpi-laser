@@ -1,11 +1,13 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>Laser Cam Control</title>
+  <title>Laser Cam Control</title>
+  <meta charset="utf-8">
 </head>
 <body>
     <center>
     <table border=1>
-        <tr><td align=center colspan=2><img onclick="send_coord(event)" id="video" width=320 height=240/></td></tr>
+        <tr><td align=center colspan=2><img src="" onclick="send_coord(event)" id="video" width=640 height=360/></td></tr>
 
         <tr><td bgcolor=#ffffaa align=center>CAMERA CONTROL</td><td bgcolor=#aaffff align=center>LASER CONTROL</td></tr>
         <tr>
@@ -80,7 +82,7 @@
     
     // handler for receiving messages
     ws.onmessage = function (messageEvent) {
-        video.src = "data:image/jpeg;base64," + messageEvent.data;
+        video.src = messageEvent.data;
     }
     
     // send coordinates of image click
@@ -89,8 +91,8 @@
         y = e.offsetY;
         w = document.getElementById("video").width;
         h = document.getElementById("video").height;
-        mx = (x - w/2)/2
-        my = (y - h/2)/2
+        mx = (x - w/2)/8
+        my = (y - h/2)/8
         ws.send("CM:"+mx+":"+my);
     }
     

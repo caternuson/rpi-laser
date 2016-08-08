@@ -12,7 +12,7 @@ import RPi.GPIO as GPIO
 from Adafruit_PCA9685 import PCA9685 as PWM
 
 import picamera
-import mjpgstream_thread
+import mjpegger
 
 class LaserCamBox():
     """Provides hardware interface to laser/camera box."""
@@ -50,8 +50,9 @@ class LaserCamBox():
         self.PWM = PWM(LaserCamBox.PWM_I2C)
         self.PWM.set_pwm_freq(LaserCamBox.PWM_FREQ)
         
-        self.camera = picamera.PiCamera(sensor_mode=5)
-        self._mjpgstream_thread = None        
+        #self.camera = picamera.PiCamera(sensor_mode=5)
+        self.camera = None
+        self._mjpegger = None        
         
         self.laserXVal = (LaserCamBox.SERVO_MIN + LaserCamBox.SERVO_MAX)/2
         self.laserYVal = (LaserCamBox.SERVO_MIN + LaserCamBox.SERVO_MAX)/2
@@ -156,30 +157,32 @@ class LaserCamBox():
         self.cameraYVal=position[1]
         self.updatePWM()
         
-    def mjpgstream_start(self, port=8081):
-        """Start thread to serve MJPG stream on specified port."""
-        if not self._mjpgstream_thread == None:
+    def mjpegstream_start(self, port=8081, resize=(640,360)):
+        """Start thread to serve MJPEG stream on specified port."""
+        if not self._mjpegger == None:
             return
-        #camera = self.__update_camera(self.camera)        
-        kwargs = {'camera':self.camera, 'port':port, 'resize':(640,360)}
-        self._mjpgstream_thread = mjpgstream_thread.MJPGStreamThread(kwargs=kwargs)
-        self._mjpgstream_thread.start()
-        while not self._mjpgstream_thread.streamRunning:
+        camera = picamera.PiCamera(sensor_mode=5)
+        camera.hflip = True
+        camera.vflip = True
+        kwargs = {'camera':camera, 'port':port, 'resize':resize}
+        self._mjpegger = mjpegger.MJPEGThread(kwargs=kwargs)
+        self._mjpegger.start()
+        while not self._mjpegger.streamRunning:
             pass
     
-    def mjpgstream_stop(self, ):
-        """Stop the MJPG stream, if running."""
-        if not self._mjpgstream_thread == None:
-            if self._mjpgstream_thread.is_alive():
-                self._mjpgstream_thread.stop()
-            self._mjpgstream_thread = None
+    def mjpegstream_stop(self, ):
+        """Stop the MJPEG stream, if running."""
+        if not self._mjpegger == None:
+            if self._mjpegger.is_alive():
+                self._mjpegger.stop()
+            self._mjpegger = None
                 
     def mjpgstream_is_alive(self, ):
         """Return True if stream is running, False otherwise."""
-        if self._mjpgstream_thread == None:
+        if self._mjpegger == None:
             return False
         else:
-            return self._mjpgstream_thread.is_alive()
+            return self._mjpegger.is_alive()
         
     def cameraGetPosition(self):
         """Return the current camera position."""
