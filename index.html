@@ -56,21 +56,7 @@
     <div role="tabpanel" id="tab_build" class="tab-pane">
       <h2>HARDWARE</h2>
       <p>
-        <div class="alert alert-info" role="alert">Documentation still in work. [2016:7:14]</div>
-      </p>
-      <p>
-        Here are some details about the hardware. Everything is housed in a cigar box.
-        The overall parts are shown below.
-        <figure>
-          <img class="img-rounded img-responsive" src="static/rpi-laser-exploded-labels.jpg"/>
-          <figcaption class="small"><strong>(1) RPi Model B+ with Wifi and Bluetooth
-          USB dongles, (2) Custom transistor board,
-          (3) Custom LED driver board, (4) Audio amp, (5) Speaker, (6) PWM servo controller,
-          (7) Laser servos, (8) Camera servos.</strong></figcaption>
-        </figure>
-      </p>
-      <p>
-        Parts List:
+        Here is a list of the main hardware components used.
         <ul>
           <li>Raspberry Pi Model B+</li>
           <li>Raspberry Pi camera module</li>
@@ -86,16 +72,28 @@
         </ul>
       </p>
       <p>
+        Everything is housed in a wooden cigar box.
+        The internal parts are shown below.
+        <figure>
+          <img class="img-rounded img-responsive" src="static/rpi-laser-exploded-labels.jpg"/>
+          <figcaption class="small"><strong>(1) RPi Model B+ with Wifi and Bluetooth
+          USB dongles, (2) Custom transistor board,
+          (3) Custom LED driver board, (4) Audio amp, (5) Speaker, (6) PWM servo controller,
+          (7) Laser servos, (8) Camera servos.</strong></figcaption>
+        </figure>
+      </p>
+
+      <p>
         The two custom boards are shown below. The one on the right is for general
-        purpose power switching using three transistor controlled via the RPi
-        GPIO pins. The one on the left is also for power switching,
-        but also includes three pots which act as current limiting
+        purpose power switching using three transistors controlled via the RPi
+        GPIO pins. The one on the left is for LED power switching.
+        It includes three pots which act as current limiting
         resistors for attached LEDs. This allows for custom trimming of individual
         LED brightness.
         <figure>
           <img class="img-rounded img-responsive" src="static/rpi-laser-boards.jpg"/>
           <figcaption class="small"><strong>Custom boards. Left for LEDs. Right
-          for general purpose.</strong></figcaption>
+          for general purpose (one output not used).</strong></figcaption>
         </figure>
       </p>
       <p>
@@ -112,6 +110,22 @@
           <img class="img-rounded img-responsive" src="static/rpi-laser-laser-detail.jpg"/>
           <figcaption class="small"><strong>The "laser".</strong></figcaption>
         </figure>
+      </p>
+      <p>
+        A drawing showing the wiring interconnect is provided in the
+        <a href="https://github.com/caternuson/rpi-laser">repo</a>
+        under the <strong>doc</strong> folder.
+        <figure>
+          <img class="img-rounded img-responsive" src="static/rpi-laser-wiring-interconnect.jpg"/>
+          <figcaption class="small"><strong>Wiring interconnect diagram.</strong></figcaption>
+        </figure>      
+      </p>
+      <p>
+        And the final product all closed up and ready for taunting.
+        <figure>
+          <img class="img-rounded img-responsive" src="static/rpi-laser-glamshot.jpg"/>
+          <figcaption class="small"><strong>HEY CAT!</strong></figcaption>
+        </figure> 
       </p>
     </div>
   </div>
