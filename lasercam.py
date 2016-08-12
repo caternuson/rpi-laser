@@ -51,9 +51,9 @@ class LaserCamBox():
         GPIO.add_event_detect(LaserCamBox.TOP_BTN_PIN,
                               GPIO.RISING,
                               bouncetime=500,
-                              callback=self.topBtnCallback)
+                              callback=self.btn_callback)
         
-        self.topBtnFunc = None
+        self.top_btn_func = None
         
         self.PWM = PWM(LaserCamBox.PWM_I2C)
         self.PWM.set_pwm_freq(LaserCamBox.PWM_FREQ)
@@ -69,14 +69,15 @@ class LaserCamBox():
         self.cameraYVal = (LaserCamBox.SERVO_MIN + LaserCamBox.SERVO_MAX)/2
         self.cameraStep = self.DEF_STEP
     
-    def registerBtnFunc(self, f):
-        self.topBtnFunc = f
+    def register_btn_func(self, f):
+        self.top_btn_func = f
         
-    def topBtnCallback(self, chan):
-        if not self.topBtnFunc == None:
-            self.topBtnFunc()
+    def btn_callback(self, chan):
+        if chan == LaserCamBox.TOP_BTN_PIN:
+            if not self.top_btn_func == None:
+                self.top_btn_func()
         
-    def checkServoValues(self):
+    def check_servo_values(self):
         """Bound the PWM values to MIN and MAX."""
         self.laserXVal = self.laserXVal if (self.laserXVal>LaserCamBox.SERVO_MIN) else LaserCamBox.SERVO_MIN
         self.laserXVal = self.laserXVal if (self.laserXVal<LaserCamBox.SERVO_MAX) else LaserCamBox.SERVO_MAX
@@ -87,29 +88,29 @@ class LaserCamBox():
         self.cameraYVal = self.cameraYVal if (self.cameraYVal>LaserCamBox.SERVO_MIN) else LaserCamBox.SERVO_MIN
         self.cameraYVal = self.cameraYVal if (self.cameraYVal<LaserCamBox.SERVO_MAX) else LaserCamBox.SERVO_MAX
         
-    def updatePWM(self):
+    def update_pwm(self):
         """Send current PWM values to PWM device."""
-        self.checkServoValues()
+        self.check_servo_values()
         self.PWM.set_pwm(LaserCamBox.LASER_X_CHAN, 0, self.laserXVal)
         self.PWM.set_pwm(LaserCamBox.LASER_Y_CHAN, 0, self.laserYVal)
         self.PWM.set_pwm(LaserCamBox.CAMERA_X_CHAN, 0, self.cameraXVal)
         self.PWM.set_pwm(LaserCamBox.CAMERA_Y_CHAN, 0, self.cameraYVal)
         
-    def enablePWM(self, update=False):
+    def enable_pwm(self, update=False):
         """Enable power to the servos."""
         GPIO.output(LaserCamBox.OE_PIN, GPIO.LOW)
         if update:
-            self.updatePWM()
+            self.update_pwm()
         
-    def disablePWM(self):
+    def disable_pwm(self):
         """Disable power to the servos."""
         GPIO.output(LaserCamBox.OE_PIN, GPIO.HIGH)
         
-    def getPWMState(self):
+    def get_pwm_state(self):
         """Return 0 if servos are enabled or 1 if disabled."""
         return GPIO.input(LaserCamBox.OE_PIN)
     
-    def isPWMEnabled(self):
+    def is_pwm_enabled(self):
         """Return True if servos are enabled, otherwise False."""
         state = GPIO.input(LaserCamBox.OE_PIN)
         if (0==state):
@@ -119,48 +120,48 @@ class LaserCamBox():
         else:
             return None
      
-    def cameraUp(self, step=None):
+    def camera_up(self, step=None):
         """Move the camera up the specified number of steps."""
         if step==None:
             step=self.cameraStep
         self.cameraYVal -= step
-        self.updatePWM()
+        self.update_pwm()
         
-    def cameraDown(self, step=None):
+    def camera_down(self, step=None):
         """Move the camera down the specified number of steps."""
         if step==None:
             step=self.cameraStep
         self.cameraYVal += step
-        self.updatePWM()
+        self.update_pwm()
         
-    def cameraLeft(self, step=None):
+    def camera_left(self, step=None):
         """Move the camera left the specified number of steps."""
         if step==None:
             step=self.cameraStep
         self.cameraXVal -= step
-        self.updatePWM()
+        self.update_pwm()
         
-    def cameraRight(self, step=None):
+    def camera_right(self, step=None):
         """Move the camera right the specified number of steps."""
         if step==None:
             step=self.cameraStep
         self.cameraXVal += step
-        self.updatePWM()
+        self.update_pwm()
         
-    def cameraMoveRelative(self, amount=(0,0)):
+    def camera_move_relative(self, amount=(0,0)):
         """Move the camera the amount specified in the tuple."""
         self.cameraXVal += amount[0]
         self.cameraYVal += amount[1]
-        self.updatePWM()
+        self.update_pwm()
         
-    def cameraHome(self):
+    def camera_home(self):
         """Move the camera to the home positon."""
-        self.cameraSetPosition(
+        self.camera_set_position(
             ( (LaserCamBox.SERVO_MIN + LaserCamBox.SERVO_MAX)/2 ,
                LaserCamBox.SERVO_MIN )
             )
         
-    def cameraSetPosition(self, position=None):
+    def camera_set_position(self, position=None):
         """Move the camera to the absolute position."""
         if position==None:
             return
@@ -170,7 +171,7 @@ class LaserCamBox():
             return
         self.cameraXVal=position[0]
         self.cameraYVal=position[1]
-        self.updatePWM()
+        self.update_pwm()
         
     def mjpegstream_start(self, port=8081, resize=(640,360)):
         """Start thread to serve MJPEG stream on specified port."""
@@ -199,46 +200,46 @@ class LaserCamBox():
         else:
             return self._mjpegger.is_alive()
         
-    def cameraGetPosition(self):
+    def camera_get_position(self):
         """Return the current camera position."""
         return (self.cameraXVal, self.cameraYVal)
         
-    def laserUp(self, step=None):
+    def laser_up(self, step=None):
         """Move the laser up the specified number of steps."""
         if step==None:
             step=self.laserStep
         self.laserYVal += step
-        self.updatePWM()
+        self.update_pwm()
         
-    def laserDown(self, step=None):
+    def laser_down(self, step=None):
         """Move the laser down the specified number of steps."""
         if step==None:
             step=self.laserStep
         self.laserYVal -= step
-        self.updatePWM()
+        self.update_pwm()
         
-    def laserLeft(self, step=None):
+    def laser_left(self, step=None):
         """Move the laser left the specified number of steps."""
         if step==None:
             step=self.laserStep
         self.laserXVal -= step
-        self.updatePWM()
+        self.update_pwm()
         
-    def laserRight(self, step=None):
+    def laser_right(self, step=None):
         """Move the laser right the specified number of steps."""
         if step==None:
             step=self.laserStep
         self.laserXVal += step
-        self.updatePWM()
+        self.update_pwm()
 
-    def laserHome(self):
+    def laser_home(self):
         """Move the laser to the home positon."""
         self.laserSetPosition(
             ( (LaserCamBox.SERVO_MIN + LaserCamBox.SERVO_MAX)/2 ,
                LaserCamBox.SERVO_MAX )
             )
         
-    def laserSetPosition(self, position=None):
+    def laser_set_position(self, position=None):
         """Move the laser to the absolute position."""
         if position==None:
             return
@@ -248,37 +249,37 @@ class LaserCamBox():
             return
         self.laserXVal=position[0]
         self.laserYVal=position[1]
-        self.updatePWM()
+        self.update_pwm()
         
-    def laserGetPosition(self):
+    def laser_get_position(self):
         """Return the current laser position."""
         return (self.laserXVal, self.laserYVal)
         
-    def laserOn(self):
+    def laser_on(self):
         """Turn the laser on."""
         GPIO.output(LaserCamBox.LASER_PIN, GPIO.HIGH)
         
-    def laserOff(self):
+    def laser_off(self):
         """Turn the laser off."""
         GPIO.output(LaserCamBox.LASER_PIN, GPIO.LOW)
         
-    def getLaserState(self):
+    def get_laser_state(self):
         """Return current laser state."""
         return GPIO.input(LaserCamBox.LASER_PIN)
     
-    def cameraLEDOn(self):
+    def camera_led_on(self):
         """Turn camera LED on."""
         GPIO.output(LaserCamBox.CAM_LED_PIN, GPIO.HIGH)
         
-    def cameraLEDOff(self):
+    def camera_led_off(self):
         """Turn camera LED off."""
         GPIO.output(LaserCamBox.CAM_LED_PIN, GPIO.LOW)
         
-    def getCamLEDState(self):
+    def get_camera_led_state(self):
         """Return current LED state."""
         return GPIO.input(LaserCamBox.CAM_LED_PIN)
     
-    def statusLEDOn(self, led):
+    def status_led_on(self, led):
         """Turn on the specified front panel status LED."""
         if   (led==1):
             GPIO.output(LaserCamBox.LED1_PIN, GPIO.HIGH)
@@ -289,7 +290,7 @@ class LaserCamBox():
         else:
             pass
 
-    def statusLEDOff(self, led):
+    def status_led_off(self, led):
         """Turn off the specified front panel status LED."""
         if   (led==1):
             GPIO.output(LaserCamBox.LED1_PIN, GPIO.LOW)
@@ -300,28 +301,28 @@ class LaserCamBox():
         else:
             pass
 
-    def statusLEDAllOff(self):
+    def status_led_all_off(self):
         """Turn off all of the front panel status LEDs."""
         self.statusLEDOff(1)
         self.statusLEDOff(2)
         self.statusLEDOff(3)
         
-    def enableAudio(self):
+    def enable_audio(self):
         """Enable the audio amplifier."""
         GPIO.output(LaserCamBox.AMP_PIN, GPIO.HIGH)
         
-    def disableAudio(self):
+    def disable_audio(self):
         """Disable the audio amplifier."""
         GPIO.output(LaserCamBox.AMP_PIN, GPIO.LOW)
         
     def speak(self, msg=None):
         """Output the supplied message on the speaker."""
-        self.enableAudio()
+        self.enable_audio()
         opt = '-p 45 -s 165'  # espeak options
         if (msg==None):
             msg = 'who has my block rockin beets?'
         os.system('espeak '+opt+' "%s"' % msg)
-        self.disableAudio()
+        self.disable_audio()
        
 #===========================================================
 # MAIN
