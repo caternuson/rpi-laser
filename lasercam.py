@@ -21,6 +21,7 @@ class LaserCamBox():
     OE_PIN              =   4       # GPIO pin for PWM enable(LOW)/disable(HIGH)
     LASER_PIN           =   16      # GPIO pin for laser on(HIGH)/off(LOW)
     CAM_LED_PIN         =   20      # white LED for camera
+    TOP_BTN_PIN         =   23      # GPIO pin for button on top
     LED1_PIN            =   26      # front status LED 1 - TOP : GREEN
     LED2_PIN            =   19      # front status LED 2 - MID : BLUE
     LED3_PIN            =   13      # front status LED 3 - BOT : GREEN
@@ -46,6 +47,13 @@ class LaserCamBox():
         GPIO.setup(LaserCamBox.LED1_PIN,    GPIO.OUT, initial=GPIO.LOW)
         GPIO.setup(LaserCamBox.LED2_PIN,    GPIO.OUT, initial=GPIO.LOW)
         GPIO.setup(LaserCamBox.LED3_PIN,    GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setup(LaserCamBox.TOP_BTN_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.add_event_detect(LaserCamBox.TOP_BTN_PIN,
+                              GPIO.RISING,
+                              bouncetime=500,
+                              callback=self.topBtnCallback)
+        
+        self.topBtnFunc = None
         
         self.PWM = PWM(LaserCamBox.PWM_I2C)
         self.PWM.set_pwm_freq(LaserCamBox.PWM_FREQ)
@@ -61,6 +69,13 @@ class LaserCamBox():
         self.cameraYVal = (LaserCamBox.SERVO_MIN + LaserCamBox.SERVO_MAX)/2
         self.cameraStep = self.DEF_STEP
     
+    def registerBtnFunc(self, f):
+        self.topBtnFunc = f
+        
+    def topBtnCallback(self, chan):
+        if not self.topBtnFunc == None:
+            self.topBtnFunc()
+        
     def checkServoValues(self):
         """Bound the PWM values to MIN and MAX."""
         self.laserXVal = self.laserXVal if (self.laserXVal>LaserCamBox.SERVO_MIN) else LaserCamBox.SERVO_MIN
