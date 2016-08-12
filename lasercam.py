@@ -234,7 +234,7 @@ class LaserCamBox():
 
     def laser_home(self):
         """Move the laser to the home positon."""
-        self.laserSetPosition(
+        self.laser_set_position(
             ( (LaserCamBox.SERVO_MIN + LaserCamBox.SERVO_MAX)/2 ,
                LaserCamBox.SERVO_MAX )
             )

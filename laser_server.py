@@ -222,10 +222,10 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
                 
     def __shutDown(self):
         self.lasercambox.mjpegstream_stop()
-        self.lasercambox.enable_pwn()
+        self.lasercambox.enable_pwm()
         self.lasercambox.camera_home()
         self.lasercambox.laser_home()  
-        self.lasercambox.camera_led_ff()
+        self.lasercambox.camera_led_off()
         self.lasercambox.laser_off()
         self.lasercambox.status_led_off(CONNECT_STATUS_LED)
         self.__saveLocations()
