@@ -63,12 +63,13 @@ class LaserCamBox():
         self.camera = None
         self._mjpegger = None        
         
-        self.laser_x = (LaserCamBox.SERVO_MIN + LaserCamBox.SERVO_MAX)/2
-        self.laser_y = (LaserCamBox.SERVO_MIN + LaserCamBox.SERVO_MAX)/2
-        self.laser_step = self.DEF_STEP
-        self.camera_x = (LaserCamBox.SERVO_MIN + LaserCamBox.SERVO_MAX)/2
-        self.camera_y = (LaserCamBox.SERVO_MIN + LaserCamBox.SERVO_MAX)/2
-        self.camera_step = self.DEF_STEP
+        self.camera_x = LaserCamBox.CAMERA_HOME[0]
+        self.camera_y = LaserCamBox.CAMERA_HOME[1]
+        self.camera_step = LaserCamBox.DEF_STEP
+        
+        self.laser_x = LaserCamBox.LASER_HOME[0]
+        self.laser_y = LaserCamBox.LASER_HOME[1]
+        self.laser_step = LaserCamBox.DEF_STEP
     
     def register_btn_func(self, func):
         self.top_btn_func = func
@@ -89,16 +90,6 @@ class LaserCamBox():
         self.laser_y = self._bound(self.laser_y, LaserCamBox.SERVO_MIN, LaserCamBox.SERVO_MAX)
         self.camera_x = self._bound(self.camera_x, LaserCamBox.SERVO_MIN, LaserCamBox.SERVO_MAX)
         self.camera_y = self._bound(self.camera_y, LaserCamBox.SERVO_MIN, LaserCamBox.SERVO_MAX)
-        '''
-        self.laser_x = self.laser_x if (self.laser_x>LaserCamBox.SERVO_MIN) else LaserCamBox.SERVO_MIN
-        self.laser_x = self.laser_x if (self.laser_x<LaserCamBox.SERVO_MAX) else LaserCamBox.SERVO_MAX
-        self.laser_y = self.laser_y if (self.laser_y>LaserCamBox.SERVO_MIN) else LaserCamBox.SERVO_MIN
-        self.laser_y = self.laser_y if (self.laser_y<LaserCamBox.SERVO_MAX) else LaserCamBox.SERVO_MAX
-        self.camera_x = self.camera_x if (self.camera_x>LaserCamBox.SERVO_MIN) else LaserCamBox.SERVO_MIN
-        self.camera_x = self.camera_x if (self.camera_x<LaserCamBox.SERVO_MAX) else LaserCamBox.SERVO_MAX
-        self.camera_y = self.camera_y if (self.camera_y>LaserCamBox.SERVO_MIN) else LaserCamBox.SERVO_MIN
-        self.camera_y = self.camera_y if (self.camera_y<LaserCamBox.SERVO_MAX) else LaserCamBox.SERVO_MAX
-        '''
         
     def update_pwm(self, ):
         """Send current PWM values to PWM device."""
