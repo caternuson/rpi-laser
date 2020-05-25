@@ -42,16 +42,6 @@ class LaserCamBox():
     PWM_FREQ            =   50      # frequency in Hz for PWM controller
 
     def __init__(self):
-        # GPIO.setwarnings(False)
-        # GPIO.setmode(GPIO.BCM)
-        # GPIO.setup(LaserCamBox.AMP_PIN,     GPIO.OUT, initial=GPIO.LOW)
-        # GPIO.setup(LaserCamBox.OE_PIN,      GPIO.OUT, initial=GPIO.HIGH)
-        # GPIO.setup(LaserCamBox.LASER_PIN,   GPIO.OUT, initial=GPIO.LOW)
-        # GPIO.setup(LaserCamBox.CAM_LED_PIN, GPIO.OUT, initial=GPIO.LOW)
-        # GPIO.setup(LaserCamBox.LED1_PIN,    GPIO.OUT, initial=GPIO.LOW)
-        # GPIO.setup(LaserCamBox.LED2_PIN,    GPIO.OUT, initial=GPIO.LOW)
-        # GPIO.setup(LaserCamBox.LED3_PIN,    GPIO.OUT, initial=GPIO.LOW)
-        # GPIO.setup(LaserCamBox.TOP_BTN_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         # GPIO.add_event_detect(LaserCamBox.TOP_BTN_PIN,
         #                         GPIO.FALLING,
         #                         bouncetime=500,
@@ -93,8 +83,8 @@ class LaserCamBox():
         self._pca = PCA9685(board.I2C())
         self._pca.frequency = self.PWM_FREQ
 
-        # self.camera = None
-        # self._mjpegger = None
+        self.camera = None
+        self._mjpegger = None
 
         self._camera_x = servo.Servo(self._pca.channels[self.CAMERA_X_CHAN])
         self._camera_y = servo.Servo(self._pca.channels[self.CAMERA_Y_CHAN])
@@ -131,11 +121,6 @@ class LaserCamBox():
 
     def update_pwm(self, ):
         """Send current PWM values to PWM device."""
-        #self.check_servo_values()
-        # self.PWM.set_pwm(LaserCamBox.LASER_X_CHAN, 0, self.laser_x)
-        # self.PWM.set_pwm(LaserCamBox.LASER_Y_CHAN, 0, self.laser_y)
-        # self.PWM.set_pwm(LaserCamBox.CAMERA_X_CHAN, 0, self.camera_x)
-        # self.PWM.set_pwm(LaserCamBox.CAMERA_Y_CHAN, 0, self.camera_y)
         self._camera_x.angle = self.camera_x
         self._camera_y.angle = self.camera_y
         self._laser_x.angle = self.laser_x
@@ -143,30 +128,20 @@ class LaserCamBox():
 
     def enable_pwm(self, update=False):
         """Enable power to the servos."""
-        # GPIO.output(LaserCamBox.OE_PIN, GPIO.LOW)
         self._pca_enable.value = False
         if update:
             self.update_pwm()
 
     def disable_pwm(self, ):
         """Disable power to the servos."""
-        # GPIO.output(LaserCamBox.OE_PIN, GPIO.HIGH)
         self._pca_enable.value = True
 
     def get_pwm_state(self, ):
         """Return 0 if servos are enabled or 1 if disabled."""
-        #return GPIO.input(LaserCamBox.OE_PIN)
         return self._pca_enable.value
 
     def is_pwm_enabled(self, ):
         """Return True if servos are enabled, otherwise False."""
-        # state = GPIO.input(LaserCamBox.OE_PIN)
-        # if state == 0:
-        #     return True
-        # elif state == 1:
-        #     return False
-        # else:
-        #     return None
         return not self._pca_enable.value
 
     def camera_up(self, step=None):
@@ -296,80 +271,54 @@ class LaserCamBox():
 
     def laser_on(self, ):
         """Turn the laser on."""
-        #GPIO.output(LaserCamBox.LASER_PIN, GPIO.HIGH)
         self._laser_enable.value = True
 
     def laser_off(self, ):
         """Turn the laser off."""
-        #GPIO.output(LaserCamBox.LASER_PIN, GPIO.LOW)
         self._laser_enable.value = False
 
     def get_laser_state(self, ):
         """Return current laser state."""
-        #return GPIO.input(LaserCamBox.LASER_PIN)
         return self._laser_enable.value
 
     def camera_led_on(self, ):
         """Turn camera LED on."""
-        #GPIO.output(LaserCamBox.CAM_LED_PIN, GPIO.HIGH)
         self._camera_led.value = True
 
     def camera_led_off(self, ):
         """Turn camera LED off."""
-        #GPIO.output(LaserCamBox.CAM_LED_PIN, GPIO.LOW)
         self._camera_led.value = False
 
     def get_camera_led_state(self, ):
         """Return current LED state."""
-        #return GPIO.input(LaserCamBox.CAM_LED_PIN)
         self._camera_led.value
 
     def status_led_on(self, led):
         """Turn on the specified front panel status LED."""
-        # if led == 1:
-        #     GPIO.output(LaserCamBox.LED1_PIN, GPIO.HIGH)
-        # elif led == 2:
-        #     GPIO.output(LaserCamBox.LED2_PIN, GPIO.HIGH)
-        # elif led == 3:
-        #     GPIO.output(LaserCamBox.LED3_PIN, GPIO.HIGH)
-        # else:
-        #     pass
-        self._status_leds[led].value = True
+        self._status_leds[led-1].value = True
 
     def status_led_off(self, led):
         """Turn off the specified front panel status LED."""
-        # if led == 1:
-        #     GPIO.output(LaserCamBox.LED1_PIN, GPIO.LOW)
-        # elif led == 2:
-        #     GPIO.output(LaserCamBox.LED2_PIN, GPIO.LOW)
-        # elif led == 3:
-        #     GPIO.output(LaserCamBox.LED3_PIN, GPIO.LOW)
-        # else:
-        #     pass
-        self._status_leds[led].value = False
-
+        self._status_leds[led-1].value = False
 
     def status_led_all_off(self, ):
         """Turn off all of the front panel status LEDs."""
-        # self.statusLEDOff(1)
-        # self.statusLEDOff(2)
-        # self.statusLEDOff(3)
         for led in self._status_leds[led]:
             led.value = False
 
     def enable_audio(self, ):
         """Enable the audio amplifier."""
-        GPIO.output(LaserCamBox.AMP_PIN, GPIO.HIGH)
+        self._amp_enable.value = True
 
     def disable_audio(self, ):
         """Disable the audio amplifier."""
-        GPIO.output(LaserCamBox.AMP_PIN, GPIO.LOW)
+        self._amp_enable.value = False
 
     def speak(self, msg="hello world"):
         """Output the supplied message on the speaker."""
         self.enable_audio()
-        opt = '-p 45 -s 165'  # espeak options
-        os.system('espeak '+opt+' "%s"' % msg)
+        opt = '--stdout -p 45 -s 165'  # espeak options
+        os.system('espeak '+opt+' "{:s}" | aplay '.format(msg))
         self.disable_audio()
 
 #===========================================================
